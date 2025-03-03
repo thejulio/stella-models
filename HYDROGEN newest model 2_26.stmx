@@ -5,7 +5,7 @@
 		<name>HYDROGEN newest model 2_26</name>
 		<uuid>389acf6d-87ed-4150-84b6-d2e3bf23018e</uuid>
 		<vendor>isee systems, inc.</vendor>
-		<product version="3.4.1" isee:build_number="3048" isee:saved_by_v1="true" lang="en">Stella Architect</product>
+		<product version="3.7.2" isee:build_number="3414" isee:saved_by_v1="true" lang="en">Stella Architect</product>
 	</header>
 	<sim_specs isee:sim_duration="1.5" isee:run_prefix="Run" isee:simulation_delay="0.06" isee:restore_on_start="false" method="Euler" time_units="Years" isee:instantaneous_flows="false" isee:ignore_module_errors="false" isee:strict_units="true" isee:loop_scores="true" isee:loop_exhaustive_allowed="1000">
 		<start>2025</start>
@@ -17,6 +17,7 @@
 	<isee:time_formats default_format="Builtin">
 		<isee:time_format name="Builtin" type="adaptive"/>
 	</isee:time_formats>
+	<isee:number_format_extenders/>
 	<default_format/>
 	<model_units>
 		<unit name="Dimensionless">
@@ -194,14 +195,14 @@ Initial Population in 200</doc>
 				<units>fraction</units>
 			</aux>
 			<group name="Population Sector" run="false">
-				<entity name="Population"/>
-				<entity name="Normal_Birth_Rate"/>
-				<entity name="Effect_of_the_ratio_on_population_growth"/>
-				<entity name="Net_Change_in_Populaiton"/>
 				<entity name="Current_Growth_Rate"/>
-				<entity name="Virginia's_Historical_Population"/>
+				<entity name="Effect_of_the_ratio_on_population_growth"/>
 				<entity name="Maximum_Population"/>
+				<entity name="Net_Change_in_Populaiton"/>
+				<entity name="Normal_Birth_Rate"/>
+				<entity name="Population"/>
 				<entity name="Ratio_of_Population_to_Maximum"/>
+				<entity name="Virginia's_Historical_Population"/>
 			</group>
 			<stock name="Investment in Plants 1">
 				<eqn>Initial_Investment_in_Plants</eqn>
@@ -347,33 +348,33 @@ $5,000/250 kWh
 				<units>Years</units>
 			</aux>
 			<group name="Hydrogen Fuel Cells" run="false">
-				<entity name='"Minimum_R&amp;D_for_Sources(FC)"'/>
-				<entity name="Hydrogen_Fuel_Cell_Capacity_Factor"/>
-				<entity name="Additions_to_Fuel_Cell_Plants"/>
-				<entity name='"Current_life_span(FC)"'/>
-				<entity name='"New_RD_Funding(FC)"'/>
-				<entity name='"Fuel_Cell_R&amp;D"'/>
-				<entity name="Electricity_Per_Plant_Per_year"/>
-				<entity name='"Fuel_Cell_Implementation_Delay_(F/y)"'/>
-				<entity name='"Government_Funding(FC)"'/>
-				<entity name="Fuel_Cell_Plants_Retired"/>
-				<entity name="Electricity_per_year"/>
-				<entity name="Investment_in_Fuel_Cell_Plants"/>
 				<entity name='"(Investment/cost)_Implementation_time(FC)"'/>
 				<entity name='"\"Time_to_allocate_Gov._Funding\"(FC)"'/>
-				<entity name='"R&amp;D/$_invested_in_Fuel_Cells"'/>
-				<entity name='"Initial_Life_Span(FC)"'/>
-				<entity name="Hydrogen_Fuel_Cell_Efficiency"/>
-				<entity name='"New_Investment(FC)"'/>
-				<entity name="Time_for_Fuel_Cell_Implementation_Delay"/>
-				<entity name='"Fuel_Cell_Plants/Facilities"'/>
-				<entity name="Fuel_Cell_Spending"/>
+				<entity name='"Additions_to_Fuel_Cell_R&amp;D"'/>
 				<entity name='"Cost_Per_Plant(FC)"'/>
+				<entity name='"Current_life_span(FC)"'/>
+				<entity name='"Effectiveness_of_R&amp;D_Spending(FC)"'/>
+				<entity name='"Fuel_Cell_Implementation_Delay_(F/y)"'/>
+				<entity name='"Fuel_Cell_Plants/Facilities"'/>
+				<entity name='"Fuel_Cell_R&amp;D"'/>
+				<entity name='"Government_Funding(FC)"'/>
+				<entity name='"Initial_Life_Span(FC)"'/>
+				<entity name='"Minimum_R&amp;D_for_Sources(FC)"'/>
+				<entity name='"New_Investment(FC)"'/>
+				<entity name='"New_RD_Funding(FC)"'/>
+				<entity name='"R&amp;D/$_invested_in_Fuel_Cells"'/>
+				<entity name='"R&amp;D_Investment(FC)"'/>
 				<entity name='"Ratio_of_R&amp;D_to_minimum(FC)"'/>
 				<entity name='"Time_for_Spending(FC)"'/>
-				<entity name='"R&amp;D_Investment(FC)"'/>
-				<entity name='"Additions_to_Fuel_Cell_R&amp;D"'/>
-				<entity name='"Effectiveness_of_R&amp;D_Spending(FC)"'/>
+				<entity name="Additions_to_Fuel_Cell_Plants"/>
+				<entity name="Electricity_Per_Plant_Per_year"/>
+				<entity name="Electricity_per_year"/>
+				<entity name="Fuel_Cell_Plants_Retired"/>
+				<entity name="Fuel_Cell_Spending"/>
+				<entity name="Hydrogen_Fuel_Cell_Capacity_Factor"/>
+				<entity name="Hydrogen_Fuel_Cell_Efficiency"/>
+				<entity name="Investment_in_Fuel_Cell_Plants"/>
+				<entity name="Time_for_Fuel_Cell_Implementation_Delay"/>
 			</group>
 			<aux name="Electricity Demand\nper Capita(2025)">
 				<doc>https://www.eia.gov/todayinenergy/detail.php?id=49036</doc>
@@ -615,93 +616,93 @@ https://www.sciencedirect.com/science/article/pii/S2215017X20300813</doc>
 				<units>Tons/Year/Plant</units>
 			</aux>
 			<group name="Hydrogen Production" run="false">
-				<entity name="Adjustment_Time_for_Average_Annual_Hydrogen_Per_Year"/>
-				<entity name='"TWh/Million_Tonnes_of_Hydrogen"'/>
-				<entity name="Additions_to_Hydrogen_per_Plant"/>
-				<entity name="Net_Change_in_Average_Annual_Hydrogen_Per_Year"/>
-				<entity name="Current_life_span"/>
-				<entity name="MWh_to_TWh"/>
-				<entity name="Tons_per_Plant_Per_year"/>
-				<entity name="TWh_per_Million_Tons_of_Hydrogen"/>
-				<entity name="Average_Annual_MWh_from_Hydrogen"/>
-				<entity name='"MWh_per_Ton_of_Hydrogen_(_E_efficiency)"'/>
-				<entity name="Average_Annual_Hydrogen_Per_Year"/>
-				<entity name="Investment_in_Plants_1"/>
-				<entity name="Cost_Per_Plant"/>
-				<entity name="Millions_of_Tons_to_Tons"/>
-				<entity name="Average_Hydrogen_per_Plant"/>
-				<entity name="Additions_to_Electrolysis_Plants"/>
-				<entity name="Time_for_Spending"/>
-				<entity name="Actual_MWh_per_Ton_of_Hydrogen"/>
 				<entity name='"(Investment/cost)_Implementation_time"'/>
-				<entity name="MWh_per_Million_Tons_of_Hydrogen"/>
 				<entity name='"Electrolysis_Plants/Facilities"'/>
-				<entity name="Percent_of_income_from_electricity_sales_reinvested_in_plants"/>
-				<entity name="Initial_Life_Span"/>
+				<entity name='"MWh_per_Ton_of_Hydrogen_(_E_efficiency)"'/>
+				<entity name='"TWh/Million_Tonnes_of_Hydrogen"'/>
+				<entity name="Actual_MWh_per_Ton_of_Hydrogen"/>
+				<entity name="Additions_to_Electrolysis_Plants"/>
+				<entity name="Additions_to_Hydrogen_per_Plant"/>
+				<entity name="Adjustment_Time_for_Average_Annual_Hydrogen_Per_Year"/>
+				<entity name="Average_Annual_Hydrogen_Per_Year"/>
+				<entity name="Average_Annual_Hydrogen_Per_Year_at_Capacity"/>
+				<entity name="Average_Annual_MWh_from_Hydrogen"/>
+				<entity name="Average_Hydrogen_per_Plant"/>
+				<entity name="Capacity_Factor_for_Electrolysis_Plants"/>
+				<entity name="Cost_Per_Plant"/>
+				<entity name="Current_life_span"/>
+				<entity name="Effect_of_Supply_to_Demand_Ratio_on_Investments"/>
+				<entity name="Electrolysis_Plant_Efficiency"/>
+				<entity name="Fraction_of_Electricity_Income_Reinvested"/>
+				<entity name="Hydrogen_per_Plant"/>
+				<entity name="Hydrogen_per_Plant_Removed"/>
+				<entity name="Hydrogen_per_year"/>
+				<entity name="Income_from_Electricity_Sales"/>
+				<entity name="Income_from_Electricity_Sales_Reinvested"/>
 				<entity name="Initial_Investment_in_Plants"/>
+				<entity name="Initial_Life_Span"/>
+				<entity name="Investment_in_Plants_1"/>
+				<entity name="Millions_of_Tons_to_Tons"/>
+				<entity name="MWh_per_Million_Tons_of_Hydrogen"/>
+				<entity name="MWh_per_Ton_of_Hydrogen"/>
+				<entity name="MWh_to_TWh"/>
+				<entity name="Net_Change_in_Average_Annual_Hydrogen_Per_Year"/>
+				<entity name="New_Investment"/>
+				<entity name="Percent_of_income_from_electricity_sales_reinvested_in_plants"/>
+				<entity name="Plants_Retired"/>
+				<entity name="Political_Will"/>
+				<entity name="Price_per_MWh"/>
 				<entity name="Ratio_of_Supply_to_Demand"/>
 				<entity name="Spending"/>
-				<entity name="Political_Will"/>
-				<entity name="Effect_of_Supply_to_Demand_Ratio_on_Investments"/>
-				<entity name="Hydrogen_per_year"/>
+				<entity name="Time_for_Spending"/>
+				<entity name="Tons_per_Plant_Per_year"/>
 				<entity name="Tons_to_Tonnes"/>
-				<entity name="Income_from_Electricity_Sales_Reinvested"/>
-				<entity name="Income_from_Electricity_Sales"/>
-				<entity name="Fraction_of_Electricity_Income_Reinvested"/>
-				<entity name="Hydrogen_per_Plant_Removed"/>
-				<entity name="New_Investment"/>
-				<entity name="MWh_per_Ton_of_Hydrogen"/>
-				<entity name="Capacity_Factor_for_Electrolysis_Plants"/>
-				<entity name="Average_Annual_Hydrogen_Per_Year_at_Capacity"/>
-				<entity name="Electrolysis_Plant_Efficiency"/>
-				<entity name="Plants_Retired"/>
-				<entity name="Price_per_MWh"/>
-				<entity name="Hydrogen_per_Plant"/>
+				<entity name="TWh_per_Million_Tons_of_Hydrogen"/>
 			</group>
 			<group name="Government Spending" run="false">
 				<entity name='"Additions_to_R&amp;D"'/>
-				<entity name='"R&amp;D/$_invested"'/>
-				<entity name='"R&amp;D"'/>
-				<entity name="Time_for_Implementation_Delay"/>
-				<entity name='"Time_to_allocate_Gov._Funding"'/>
-				<entity name='"Minimum_R&amp;D_for_Sources"'/>
-				<entity name='"R&amp;D_Investment"'/>
-				<entity name="Government_Funding"/>
-				<entity name='"Percent_of_Income_from_Electricity_Sales_Reinvested_in_R&amp;D"'/>
 				<entity name='"Effectiveness_of_R&amp;D_Spending"'/>
 				<entity name='"Implementation_Delay_(F/y)"'/>
+				<entity name='"Minimum_R&amp;D_for_Sources"'/>
+				<entity name='"Percent_of_Income_from_Electricity_Sales_Reinvested_in_R&amp;D"'/>
+				<entity name='"R&amp;D"'/>
+				<entity name='"R&amp;D/$_invested"'/>
+				<entity name='"R&amp;D_Investment"'/>
 				<entity name='"Ratio_of_R&amp;D_to_minimum"'/>
+				<entity name='"Time_to_allocate_Gov._Funding"'/>
+				<entity name="Government_Funding"/>
 				<entity name="New_RD_Funding_2"/>
+				<entity name="Time_for_Implementation_Delay"/>
 			</group>
 			<group name="Economics" run="false">
-				<entity name="Additions_to_Profit"/>
-				<entity name="Time_to_Adjust_Yearly_Spending"/>
-				<entity name="Net_Change_in_Average_Annual_Cost"/>
-				<entity name="Cumulative_Cost"/>
-				<entity name="Fuel_Cell_Costs"/>
-				<entity name="Average_Annual_Cost"/>
-				<entity name="Electrolysis_Plant_Costs"/>
-				<entity name="Total_Profit"/>
 				<entity name="Added_Cost"/>
+				<entity name="Additions_to_Profit"/>
+				<entity name="Average_Annual_Cost"/>
+				<entity name="Cumulative_Cost"/>
+				<entity name="Electrolysis_Plant_Costs"/>
+				<entity name="Fuel_Cell_Costs"/>
+				<entity name="Net_Change_in_Average_Annual_Cost"/>
+				<entity name="Time_to_Adjust_Yearly_Spending"/>
+				<entity name="Total_Profit"/>
 			</group>
 			<group name="Electricity Demand" run="false">
 				<entity name='"Electricity_Demand_per_Capita(2025)"'/>
+				<entity name="Adjustment_Time_For_Growth"/>
 				<entity name="Adjustment_Time_for_Overall_Electricity_Demand"/>
+				<entity name="Demand_for_Electricity"/>
+				<entity name="Demand_Returning_to_Normal"/>
+				<entity name="Electricity_Demand_Growth_per_Year"/>
+				<entity name="Electricity_Storage_Demand"/>
+				<entity name="Fraction_of_Electricity_Needed_for_Storage"/>
+				<entity name="Growth_in_Electricity_Demand"/>
+				<entity name="Initial_Growth_Factor"/>
 				<entity name="New_Growth_in_Electricity_Demand"/>
 				<entity name="New_Growth_in_Electricity_Demand_Fraction"/>
-				<entity name="Adjustment_Time_For_Growth"/>
-				<entity name="Demand_for_Electricity"/>
-				<entity name="Initial_Growth_Factor"/>
-				<entity name="Time_for_Growth_to_Start"/>
-				<entity name="Time_to_Return_to_Normal"/>
-				<entity name="Fraction_of_Electricity_Needed_for_Storage"/>
-				<entity name="Electricity_Demand_Growth_per_Year"/>
 				<entity name="Overall_Electricity_Demand"/>
-				<entity name="Growth_in_Electricity_Demand"/>
 				<entity name="Scenario_for_Growth_in_Demand"/>
-				<entity name="Electricity_Storage_Demand"/>
-				<entity name="Demand_Returning_to_Normal"/>
+				<entity name="Time_for_Growth_to_Start"/>
 				<entity name="Time_for_Growth_to_Stop"/>
+				<entity name="Time_to_Return_to_Normal"/>
 			</group>
 			<aux name="Percent of income from electricity sales reinvested in plants">
 				<doc>https://einvestingforbeginners.com/rd-spending-as-a-percentage-of-revenue-by-industry/</doc>
@@ -770,6 +771,7 @@ https://www.sciencedirect.com/science/article/pii/S2215017X20300813</doc>
 				<isee:pie_input color="black" background="white" font_size="12pt" legend_position="bottom" isee:transparent="false"/>
 				<knob color="#66CC66" background="#E0E0E0" font_size="12pt" label_side="bottom" wrap_title="true"/>
 				<numeric_input color="black" background="#E0E0E0" font_size="12pt" label_side="left" wrap_title="true" input_expands="false" input_width="100"/>
+				<isee:dropdown_input color="black" background="white" font_size="12pt" label_side="left" wrap_title="true" input_expands="false" input_width="100"/>
 				<switch color="black" background="#E0E0E0" font_size="12pt" label_side="top" wrap_title="true" isee:appearance="switch" isee:on_color="green"/>
 				<options color="black" background="white" appearance="radio-buttons" arrangement="vertical"/>
 				<graphical_input color="black" background="#E0E0E0" font_size="12pt" isee:show_hover_tip="true"/>
@@ -784,7 +786,7 @@ https://www.sciencedirect.com/science/article/pii/S2215017X20300813</doc>
 				<isee:iframe color="black" background="white" text_align="left" vertical_text_align="top" font_size="12pt" border_width="thin" border_style="solid"/>
 				<isee:financial_table color="black" background="#E0E0E0" text_align="right" font_size="12pt" hide_border="false" auto_fit="true" first_column_width="250" other_column_width="100" header_font_style="normal" header_font_weight="bold" header_text_decoration="none" header_text_align="center" header_vertical_text_align="center" header_font_color="black" header_font_family="Arial" header_font_size="14pt" header_text_padding="2" header_text_border_color="black" header_text_border_width="thin" header_text_border_style="none"/>
 			</style>
-			<view isee:show_pages="false" background="white" page_width="1056" page_height="816" isee:page_cols="14" isee:page_rows="5" zoom="60" isee:popup_graphs_are_comparative="true" isee:enable_non_negative_highlights="false" type="stock_flow">
+			<view isee:show_pages="false" background="white" page_width="1056" page_height="816" isee:page_cols="14" isee:page_rows="5" isee:scroll_y="933.333" zoom="60" isee:popup_graphs_are_comparative="true" isee:enable_non_negative_highlights="false" type="stock_flow">
 				<style color="black" background="white" font_style="normal" font_weight="normal" text_decoration="none" text_align="center" vertical_text_align="center" font_color="black" font_family="Arial" font_size="10pt" padding="2" border_color="black" border_width="thin" border_style="none">
 					<stock color="blue" background="white" font_color="blue" font_size="9pt" label_side="top">
 						<shape type="rectangle" width="45" height="35"/>
@@ -1161,7 +1163,7 @@ https://www.sciencedirect.com/science/article/pii/S2215017X20300813</doc>
 					</from>
 					<to>New_Growth_in_Electricity_Demand</to>
 				</connector>
-				<stacked_container uid="54" x="4265" y="362.916" width="350" height="250">
+				<stacked_container uid="54" x="4440" y="487.916">
 					<graph width="350" height="250" comparative="true" type="time_series" show_grid="false" isee:tick_type="none" include_units_in_legend="false" plot_numbers="false" isee:label_pie_slices="false" isee:show_pie_borders="true" num_x_grid_lines="0" num_y_grid_lines="0" num_x_labels="5" num_y_labels="3" isee:fill_intensity="0.1" isee:allow_zero_axis="true" left_axis_multi_scale="false" left_axis_auto_scale="true" left_include_units="true" right_axis_multi_scale="false" right_axis_auto_scale="true" right_include_units="true">
 						<plot color="blue" isee:keep_zero_visible="true" pen_width="1" index="0" show_y_axis="true">
 							<entity name="Demand_for_Electricity"/>
@@ -1383,7 +1385,7 @@ https://www.sciencedirect.com/science/article/pii/S2215017X20300813</doc>
 					<from>Electrolysis_Plant_Costs</from>
 					<to>Added_Cost</to>
 				</connector>
-				<aux x="495.417" y="1491.42" width="18" height="18" name="Fuel Cell Costs"/>
+				<aux x="504.417" y="1500.42" name="Fuel Cell Costs"/>
 				<connector uid="103" angle="279.593">
 					<from>
 						<alias uid="101"/>
@@ -1434,7 +1436,7 @@ https://www.sciencedirect.com/science/article/pii/S2215017X20300813</doc>
 					<from>Average_Annual_Cost</from>
 					<to>Net_Change_in_Average_Annual_Cost</to>
 				</connector>
-				<aux x="632.583" y="1826.67" name="Time to Adjust\nYearly Spending"/>
+				<aux label_side="left" label_angle="225" x="506" y="1838.34" name="Time to Adjust\nYearly Spending"/>
 				<connector uid="113" angle="347.735">
 					<from>Time_to_Adjust_Yearly_Spending</from>
 					<to>Net_Change_in_Average_Annual_Cost</to>
@@ -1519,32 +1521,32 @@ https://www.sciencedirect.com/science/article/pii/S2215017X20300813</doc>
 					<to>Additions_to_Hydrogen_per_Plant</to>
 				</connector>
 				<group locked="true" x="29.25" y="53.833" width="2271.67" height="825.25" name="Hydrogen Production">
-					<item uid="145"/>
-					<item uid="91"/>
-					<item uid="18"/>
-					<item uid="87"/>
 					<item uid="120"/>
-					<item uid="82"/>
-					<item uid="79"/>
+					<item uid="131"/>
 					<item uid="132"/>
 					<item uid="139"/>
-					<item uid="131"/>
+					<item uid="145"/>
+					<item uid="18"/>
+					<item uid="79"/>
+					<item uid="82"/>
+					<item uid="87"/>
+					<item uid="91"/>
 				</group>
 				<group locked="true" x="339.917" y="952.583" width="910" height="309" name="Government Spending">
 					<item uid="149"/>
 				</group>
 				<group locked="true" x="260.833" y="1382.05" width="1206.75" height="819" name="Economics">
+					<item uid="101"/>
+					<item uid="102"/>
+					<item uid="106"/>
+					<item uid="107"/>
+					<item uid="109"/>
+					<item uid="137"/>
+					<item uid="148"/>
 					<item uid="151"/>
 					<item uid="152"/>
-					<item uid="137"/>
-					<item uid="106"/>
-					<item uid="97"/>
-					<item uid="107"/>
-					<item uid="148"/>
-					<item uid="109"/>
-					<item uid="102"/>
-					<item uid="101"/>
 					<item uid="96"/>
+					<item uid="97"/>
 				</group>
 				<group locked="true" x="3528.75" y="27.875" width="1422.5" height="621.5" name="Electricity Demand">
 					<item uid="51"/>
