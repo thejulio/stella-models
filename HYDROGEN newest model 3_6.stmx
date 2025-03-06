@@ -1,0 +1,2259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xmile version="1.0" xmlns="http://docs.oasis-open.org/xmile/ns/XMILE/v1.0" xmlns:isee="http://iseesystems.com/XMILE">
+	<header>
+		<smile version="1.0" namespace="std, isee"/>
+		<name>HYDROGEN newest model 3_6</name>
+		<uuid>75af7811-3df5-4c9b-afc2-39d3c4e285d2</uuid>
+		<vendor>isee systems, inc.</vendor>
+		<product version="3.7.2" isee:build_number="3414" isee:saved_by_v1="true" lang="en">Stella Architect</product>
+	</header>
+	<sim_specs isee:sim_duration="1.5" isee:run_prefix="Run" isee:simulation_delay="0.02" isee:restore_on_start="false" method="RK4" time_units="Years" isee:instantaneous_flows="false" isee:ignore_module_errors="false" isee:strict_units="true" isee:loop_scores="true" isee:loop_exhaustive_allowed="1000">
+		<start>2025</start>
+		<stop>2100</stop>
+		<dt reciprocal="true">16</dt>
+	</sim_specs>
+	<isee:prefs saved_runs="5" keep="false" show_module_prefix="true" live_update_on_drag="true" show_restore_buttons="false" layer="model" isee:design="Deluxe Prev-Next Blue Green Pastel" isee:design_custom="false" interface_scale_ui="true" interface_max_page_width="10000" interface_max_page_height="10000" interface_min_page_width="0" interface_min_page_height="0" rerun_on_structure_change="false" rifp="true"/>
+	<isee:multiplayer_settings include_chat="true" allow_observers="false" advance_time_increment="1" max_advance_time_in_ms="0" model_stops_when_players_drop="false" observer_start_page="home_page" enabled="false"/>
+	<isee:time_formats default_format="Builtin">
+		<isee:time_format name="Builtin" type="adaptive"/>
+	</isee:time_formats>
+	<isee:number_format_extenders/>
+	<default_format/>
+	<model_units>
+		<unit name="Dimensionless">
+			<eqn>1</eqn>
+			<alias>dmnl</alias>
+			<alias>unitless</alias>
+			<alias>fraction</alias>
+		</unit>
+		<unit name="People">
+			<eqn/>
+			<alias>person</alias>
+			<alias>persons</alias>
+		</unit>
+		<unit name="$">
+			<eqn/>
+			<alias>dollar</alias>
+			<alias>dollars</alias>
+		</unit>
+		<unit name="Tons">
+			<eqn/>
+			<alias>ton</alias>
+		</unit>
+		<unit name="Dollars Per Year">
+			<eqn>$/Years</eqn>
+			<alias>Dollar Per Year</alias>
+			<alias>$ per year</alias>
+		</unit>
+		<unit name="Years">
+			<eqn/>
+			<alias>yr</alias>
+			<alias>year</alias>
+		</unit>
+	</model_units>
+	<model>
+		<variables>
+			<stock name="Electrolysis\nPlants/Facilities">
+				<eqn>0</eqn>
+				<inflow>Additions_to_Electrolysis_Plants</inflow>
+				<outflow>Plants_Retired</outflow>
+				<units>Plant</units>
+			</stock>
+			<flow name="Additions to\nElectrolysis Plants">
+				<eqn>(Spending/Cost_Per_Plant)</eqn>
+				<units>Plant/Years</units>
+			</flow>
+			<flow name="Plants Retired">
+				<eqn>&quot;Electrolysis_Plants/Facilities&quot;/Current_life_span</eqn>
+				<non_negative/>
+				<units>Plant/Years</units>
+			</flow>
+			<aux name="Initial Life Span">
+				<doc>https://austinpowereng.com/Fuel%20cell/Yang_AustinPower%20H2Electrolysis%20FCS2019.pdf</doc>
+				<eqn>20</eqn>
+				<units>Years</units>
+			</aux>
+			<aux name="Current life span">
+				<eqn>Initial_Life_Span</eqn>
+				<units>Years</units>
+			</aux>
+			<stock name="Government\nFunding">
+				<eqn>750000000</eqn>
+				<inflow>New_RD_Funding_2</inflow>
+				<outflow>&quot;R&amp;D_Investment&quot;</outflow>
+				<units>dollars</units>
+			</stock>
+			<flow name="New RD Funding 2">
+				<eqn>Income_from_Electricity_Sales*&quot;Percent_of_Income_from_Electricity_Sales_Reinvested_in_R&amp;D&quot;</eqn>
+				<non_negative/>
+				<units>Dollars Per Year</units>
+			</flow>
+			<flow name="R&amp;D Investment">
+				<eqn>Government_Funding/&quot;Time_to_allocate_Gov._Funding&quot;</eqn>
+				<non_negative/>
+				<units>Dollars Per Year</units>
+			</flow>
+			<aux name="Time to allocate\nGov. Funding">
+				<eqn>6.8</eqn>
+				<units>Years</units>
+			</aux>
+			<stock name="R&amp;D">
+				<eqn>0</eqn>
+				<inflow>&quot;Additions_to_R&amp;D&quot;</inflow>
+				<units>RnD</units>
+			</stock>
+			<aux name="R&amp;D/$ invested">
+				<eqn>.000001</eqn>
+				<units>RnD/Dollar</units>
+			</aux>
+			<flow name="Additions to R&amp;D">
+				<eqn>&quot;R&amp;D_Investment&quot;*&quot;R&amp;D/$_invested&quot;*&quot;Effectiveness_of_R&amp;D_Spending&quot;</eqn>
+				<non_negative/>
+				<units>RnD/Years</units>
+			</flow>
+			<aux name="Effectiveness of R&amp;D Spending">
+				<eqn>.25</eqn>
+				<format precision="0.1"/>
+				<range min="0" max="1"/>
+				<units>Dimensionless</units>
+			</aux>
+			<aux name="Minimum R&amp;D\nfor Sources">
+				<eqn>200</eqn>
+				<units>RnD</units>
+			</aux>
+			<aux name="Ratio of R&amp;D to minimum">
+				<eqn>&quot;R&amp;D&quot;/&quot;Minimum_R&amp;D_for_Sources&quot;</eqn>
+				<units>Dimensionless</units>
+			</aux>
+			<aux name="Implementation Delay (F/y)">
+				<eqn>&quot;Ratio_of_R&amp;D_to_minimum&quot;</eqn>
+				<gf>
+					<xscale min="0" max="2"/>
+					<yscale min="1" max="1.5"/>
+					<ypts>1,1.006,1.022,1.058,1.134,1.25,1.366,1.442,1.478,1.494,1.5</ypts>
+				</gf>
+				<units>Dimensionless</units>
+			</aux>
+			<aux name="Time for\nImplementation Delay">
+				<eqn>5</eqn>
+				<units>Years</units>
+			</aux>
+			<aux name="Cost Per Plant">
+				<doc>https://austinpowereng.com/Fuel%20cell/Yang_AustinPower%20H2Electrolysis%20FCS2019.pdf</doc>
+				<eqn>100e6</eqn>
+				<units>Dollar/Plant</units>
+			</aux>
+			<aux name="(Investment/cost) Implementation time">
+				<eqn>0</eqn>
+				<units>Dimensionless</units>
+			</aux>
+			<aux name="Tons per Plant Per year">
+				<doc>https://austinpowereng.com/Fuel%20cell/Yang_AustinPower%20H2Electrolysis%20FCS2019.pdf</doc>
+				<eqn>182500</eqn>
+				<units>Tons/Plant/Year</units>
+			</aux>
+			<aux name="Hydrogen per year">
+				<eqn>&quot;Electrolysis_Plants/Facilities&quot;*Average_Hydrogen_per_Plant</eqn>
+				<units>Tons/Year</units>
+			</aux>
+			<stock name="Investment in Plants 1">
+				<eqn>Initial_Investment_in_Plants</eqn>
+				<inflow>New_Investment</inflow>
+				<outflow>Spending</outflow>
+				<units>dollars</units>
+			</stock>
+			<flow name="New Investment">
+				<eqn>(Income_from_Electricity_Sales_Reinvested*Percent_of_income_from_electricity_sales_reinvested_in_plants)+Money_for_New_Plants</eqn>
+				<non_negative/>
+				<units>Dollars Per Year</units>
+			</flow>
+			<flow name="Spending">
+				<eqn>(Investment_in_Plants_1/Time_for_Spending)*Effect_of_Supply_to_Demand_Ratio_on_Investments</eqn>
+				<non_negative/>
+				<units>Dollars Per Year</units>
+			</flow>
+			<aux name="Time for Spending">
+				<eqn>5</eqn>
+				<units>Years</units>
+			</aux>
+			<stock name="Fuel Cell\nPlants/Facilities">
+				<eqn>0</eqn>
+				<inflow>Additions_to_Fuel_Cell_Plants</inflow>
+				<outflow>Fuel_Cell_Plants_Retired</outflow>
+				<units>Plant</units>
+			</stock>
+			<flow name="Additions to\nFuel Cell Plants">
+				<eqn>(Fuel_Cell_Spending/&quot;Cost_Per_Plant(FC)&quot;)*&quot;Fuel_Cell_Implementation_Delay_(F/y)&quot;+Fuel_Cell_Plants_Retired</eqn>
+				<non_negative/>
+				<units>Plant/Years</units>
+			</flow>
+			<flow name="Fuel Cell Plants Retired">
+				<eqn>&quot;Fuel_Cell_Plants/Facilities&quot;/&quot;Current_life_span(FC)&quot;</eqn>
+				<non_negative/>
+				<units>Plant/Years</units>
+			</flow>
+			<aux name="Initial Life Span(FC)">
+				<doc>https://www.autozonic.com/how-long-do-hydrogen-fuel-cells-last/</doc>
+				<eqn>15</eqn>
+				<units>Years</units>
+			</aux>
+			<aux name="Current life span(FC)">
+				<eqn>&quot;Initial_Life_Span(FC)&quot;</eqn>
+				<units>Years</units>
+			</aux>
+			<stock name="Government\nFunding(FC)">
+				<doc>https://www.hydrogen.energy.gov/library/funding-opportunities</doc>
+				<eqn>62e6</eqn>
+				<inflow>&quot;New_RD_Funding(FC)&quot;</inflow>
+				<outflow>&quot;R&amp;D_Investment(FC)&quot;</outflow>
+				<units>dollars</units>
+			</stock>
+			<flow name="New RD Funding(FC)">
+				<eqn>0</eqn>
+				<non_negative/>
+				<units>Dollars Per Year</units>
+			</flow>
+			<flow name="R&amp;D Investment(FC)">
+				<eqn>&quot;Government_Funding(FC)&quot;/&quot;\&quot;Time_to_allocate_Gov._Funding\&quot;(FC)&quot;</eqn>
+				<non_negative/>
+				<units>Dollars Per Year</units>
+			</flow>
+			<aux name='"Time to allocate\nGov. Funding"(FC)'>
+				<eqn>6.8</eqn>
+				<units>Years</units>
+			</aux>
+			<stock name="Fuel Cell\nR&amp;D">
+				<eqn>0</eqn>
+				<inflow>&quot;Additions_to_Fuel_Cell_R&amp;D&quot;</inflow>
+				<units>RnD</units>
+			</stock>
+			<aux name="R&amp;D/$ invested in\nFuel Cells">
+				<eqn>.000001</eqn>
+				<units>RnD/Dollar</units>
+			</aux>
+			<flow name="Additions to Fuel\nCell R&amp;D">
+				<eqn>&quot;R&amp;D_Investment(FC)&quot;*&quot;R&amp;D/$_invested_in_Fuel_Cells&quot;*&quot;Effectiveness_of_R&amp;D_Spending(FC)&quot;</eqn>
+				<non_negative/>
+				<units>RnD/Years</units>
+			</flow>
+			<aux name="Effectiveness of R&amp;D Spending(FC)">
+				<eqn>1</eqn>
+				<units>Dimensionless</units>
+			</aux>
+			<aux name="Minimum R&amp;D\nfor Sources(FC)">
+				<eqn>10</eqn>
+				<units>RnD</units>
+			</aux>
+			<aux name="Ratio of R&amp;D to\nminimum(FC)">
+				<eqn>&quot;Fuel_Cell_R&amp;D&quot;/&quot;Minimum_R&amp;D_for_Sources(FC)&quot;</eqn>
+				<units>Dimensionless</units>
+			</aux>
+			<aux name="Fuel Cell Implementation Delay (F/y)">
+				<eqn>&quot;Ratio_of_R&amp;D_to_minimum(FC)&quot;</eqn>
+				<gf>
+					<xscale min="0" max="2"/>
+					<yscale min="1" max="2.5496"/>
+					<ypts>1,1.02,1.067,1.181,1.415,1.775,2.135,2.369,2.482,2.53,2.55</ypts>
+				</gf>
+				<units>Dimensionless</units>
+			</aux>
+			<aux name="Time for Fuel Cell\nImplementation Delay">
+				<eqn>5</eqn>
+				<units>Years</units>
+			</aux>
+			<aux name="Cost Per Plant(FC)">
+				<doc>https://www.energy.gov/sites/prod/files/2016/07/f33/fcto_battelle_mfg_cost_analysis_pp_chp_fc_systems.pdf
+
+$5,000/250 kWh
+
+=$32,400/1.62 MW plant</doc>
+				<eqn>32400</eqn>
+				<units>Dollar/Plant</units>
+			</aux>
+			<aux name="(Investment/cost)\nImplementation time(FC)">
+				<eqn>0</eqn>
+				<units>Dimensionless</units>
+			</aux>
+			<aux name="Electricity Per Plant\nPer year">
+				<doc>https://www.eia.gov/todayinenergy/detail.php?id=35872</doc>
+				<eqn>14464.2857</eqn>
+				<units>MWh/Plant/Year</units>
+			</aux>
+			<aux name="Electricity per year">
+				<eqn>&quot;Fuel_Cell_Plants/Facilities&quot;*Electricity_Per_Plant_Per_year</eqn>
+				<units>MWh/Year</units>
+			</aux>
+			<stock name="Investment in\nFuel Cell Plants">
+				<doc>https://www.hydrogen.energy.gov/library/funding-opportunities</doc>
+				<eqn>62e6</eqn>
+				<inflow>&quot;New_Investment(FC)&quot;</inflow>
+				<outflow>Fuel_Cell_Spending</outflow>
+				<units>dollars</units>
+			</stock>
+			<flow name="New Investment(FC)">
+				<eqn>0</eqn>
+				<non_negative/>
+				<units>Dollars Per Year</units>
+			</flow>
+			<flow name="Fuel Cell Spending">
+				<eqn>(Investment_in_Fuel_Cell_Plants/&quot;Time_for_Spending(FC)&quot;)*Effect_of_Supply_to_Demand_Ratio_on_Investments</eqn>
+				<non_negative/>
+				<units>Dollars Per Year</units>
+			</flow>
+			<aux name="Time for Spending(FC)">
+				<eqn>5</eqn>
+				<units>Years</units>
+			</aux>
+			<group name="Hydrogen Fuel Cells" run="false">
+				<entity name='"(Investment/cost)_Implementation_time(FC)"'/>
+				<entity name='"\"Time_to_allocate_Gov._Funding\"(FC)"'/>
+				<entity name='"Additions_to_Fuel_Cell_R&amp;D"'/>
+				<entity name='"Cost_Per_Plant(FC)"'/>
+				<entity name='"Current_life_span(FC)"'/>
+				<entity name='"Effectiveness_of_R&amp;D_Spending(FC)"'/>
+				<entity name='"Fuel_Cell_Implementation_Delay_(F/y)"'/>
+				<entity name='"Fuel_Cell_Plants/Facilities"'/>
+				<entity name='"Fuel_Cell_R&amp;D"'/>
+				<entity name='"Government_Funding(FC)"'/>
+				<entity name='"Initial_Life_Span(FC)"'/>
+				<entity name='"Minimum_R&amp;D_for_Sources(FC)"'/>
+				<entity name='"New_Investment(FC)"'/>
+				<entity name='"New_RD_Funding(FC)"'/>
+				<entity name='"R&amp;D/$_invested_in_Fuel_Cells"'/>
+				<entity name='"R&amp;D_Investment(FC)"'/>
+				<entity name='"Ratio_of_R&amp;D_to_minimum(FC)"'/>
+				<entity name='"Time_for_Spending(FC)"'/>
+				<entity name="Additions_to_Fuel_Cell_Plants"/>
+				<entity name="Demand_for_Hydrogen"/>
+				<entity name="Electricity_Per_Plant_Per_year"/>
+				<entity name="Electricity_per_year"/>
+				<entity name="Fuel_Cell_Plants_Retired"/>
+				<entity name="Fuel_Cell_Spending"/>
+				<entity name="Hydrogen_Fuel_Cell_Capacity_Factor"/>
+				<entity name="Hydrogen_Fuel_Cell_Efficiency"/>
+				<entity name="Hydrogen_per_Plant"/>
+				<entity name="Investment_in_Fuel_Cell_Plants"/>
+				<entity name="Time_for_Fuel_Cell_Implementation_Delay"/>
+			</group>
+			<aux name="Electricity Demand\nper Capita(2025)">
+				<doc>https://www.eia.gov/todayinenergy/detail.php?id=49036</doc>
+				<eqn>14.2</eqn>
+				<units>MWh/People/Year</units>
+			</aux>
+			<aux name="Electricity Demand Growth per Year">
+				<doc>https://www.eia.gov/todayinenergy/detail.php?id=49036</doc>
+				<eqn>1.01</eqn>
+				<units>Dimensionless</units>
+			</aux>
+			<stock name="Overall Electricity\nDemand">
+				<doc>(8.6e6)*4.6633
+
+https://www.sciencedirect.com/science/article/pii/S2215017X20300813</doc>
+				<eqn>{40104380}108e6</eqn>
+				<inflow>New_Growth_in_Electricity_Demand</inflow>
+				<units>MWh/Year</units>
+			</stock>
+			<flow name="New Growth in Electricity Demand">
+				<eqn>((Population*&quot;Electricity_Demand_per_Capita(2025)&quot;)-Overall_Electricity_Demand)/Adjustment_Time_for_Overall_Electricity_Demand</eqn>
+				<units>MWh/Year/Years</units>
+			</flow>
+			<stock name="Growth in\nElectricity Demand">
+				<eqn>1</eqn>
+				<inflow>New_Growth_in_Electricity_Demand_Fraction</inflow>
+				<outflow>Demand_Returning_to_Normal</outflow>
+				<units>Dimensionless</units>
+			</stock>
+			<flow name="New Growth in Electricity Demand Fraction">
+				<eqn>(Initial_Growth_Factor/Adjustment_Time_For_Growth)*(1+STEP(Scenario_for_Growth_in_Demand, Time_for_Growth_to_Start)-STEP(Scenario_for_Growth_in_Demand, Time_for_Growth_to_Stop))</eqn>
+				<non_negative/>
+				<units>Dimensionless/Year</units>
+			</flow>
+			<flow name="Demand Returning\nto Normal">
+				<eqn>Growth_in_Electricity_Demand/Time_to_Return_to_Normal</eqn>
+				<non_negative/>
+				<units>Dimensionless/Year</units>
+			</flow>
+			<aux name="Initial Growth\nFactor">
+				<eqn>1</eqn>
+				<units>Dimensionless</units>
+			</aux>
+			<aux name="Scenario for Growth\nin Demand">
+				<eqn>.01</eqn>
+				<format precision="0.01" scale_by="1"/>
+				<range min="0" max="0.5"/>
+				<units>Dimensionless</units>
+			</aux>
+			<aux name="Time for Growth\nto Start">
+				<eqn>2030</eqn>
+				<format precision="1" scale_by="1"/>
+				<range min="2025" max="2050"/>
+				<units>Years</units>
+			</aux>
+			<aux name="Time for Growth\nto Stop">
+				<eqn>2050</eqn>
+				<format precision="1" scale_by="1"/>
+				<range min="2025" max="2051"/>
+				<units>Years</units>
+			</aux>
+			<aux name="Adjustment Time\nFor Growth">
+				<eqn>5</eqn>
+				<units>Years</units>
+			</aux>
+			<aux name="Time to Return\nto Normal">
+				<eqn>5</eqn>
+				<units>Years</units>
+			</aux>
+			<aux name="Demand for\nElectricity">
+				<eqn>Overall_Electricity_Demand*Growth_in_Electricity_Demand</eqn>
+				<units>MWh/Year</units>
+			</aux>
+			<aux name="Adjustment Time\nfor Overall Electricity Demand">
+				<eqn>3</eqn>
+				<units>Years</units>
+			</aux>
+			<stock name="Average Annual\nHydrogen Per Year">
+				<eqn>0</eqn>
+				<inflow>Net_Change_in_Average_Annual_Hydrogen_Per_Year</inflow>
+				<units>Tons/Year</units>
+			</stock>
+			<flow name="Net Change in Average Annual Hydrogen Per Year">
+				<eqn>(Hydrogen_per_year-Average_Annual_Hydrogen_Per_Year)/Adjustment_Time_for_Average_Annual_Hydrogen_Per_Year</eqn>
+				<units>Tons/Year/Years</units>
+			</flow>
+			<aux name="Adjustment Time for Average Annual Hydrogen Per Year">
+				<eqn>3</eqn>
+				<units>Years</units>
+			</aux>
+			<aux name="TWh/Million Tonnes of Hydrogen">
+				<doc>https://www.carboncommentary.com/blog/2021/6/11/some-rules-of-thumb-of-the-hydrogen-economy</doc>
+				<eqn>33</eqn>
+				<units>TWh/Million Tonne</units>
+			</aux>
+			<aux name="MWh to TWh">
+				<doc>https://www.techtarget.com/searchstorage/definition/Kilo-mega-giga-tera-peta-and-all-that</doc>
+				<eqn>10^(6)</eqn>
+				<units>MWh/TWh</units>
+			</aux>
+			<aux name="Tons to Tonnes">
+				<doc>https://www.convertunits.com/from/tons/to/tonnes</doc>
+				<eqn>1.1023</eqn>
+				<units>Million Tonne/Million Tons</units>
+			</aux>
+			<aux name="TWh per Million Tons of Hydrogen">
+				<eqn>&quot;TWh/Million_Tonnes_of_Hydrogen&quot;*Tons_to_Tonnes</eqn>
+				<units>TWh/Million Tons</units>
+			</aux>
+			<aux name="MWh per Million Tons of Hydrogen">
+				<eqn>TWh_per_Million_Tons_of_Hydrogen*MWh_to_TWh</eqn>
+				<units>MWh/Million Tons</units>
+			</aux>
+			<aux name="Millions of Tons to Tons">
+				<eqn>1e6</eqn>
+				<units>Tons/Million Tons</units>
+			</aux>
+			<aux name="MWh per Ton of Hydrogen">
+				<eqn>MWh_per_Million_Tons_of_Hydrogen/Millions_of_Tons_to_Tons</eqn>
+				<units>MWh/Tons</units>
+			</aux>
+			<aux name="Average Annual\nMWh from Hydrogen">
+				<eqn>Average_Annual_Hydrogen_Per_Year_at_Capacity*Actual_MWh_per_Ton_of_Hydrogen</eqn>
+				<units>MWh/Year</units>
+			</aux>
+			<aux name="Electricity Storage Demand">
+				<doc>https://www.scientificamerican.com/article/castelvecchi-how-big-battery-would-it-take-power-usa/#:~:text=Instead%2C%20according%20to%20Imre%20Gyuk%2C%20who%20heads%20the,that%2020%20percent%20would%20amount%20to%2080%20gigawatts</doc>
+				<eqn>Demand_for_Electricity*Fraction_of_Electricity_Needed_for_Storage</eqn>
+				<units>MWh/Year</units>
+			</aux>
+			<aux name="Fraction of Electricity Needed for Storage">
+				<eqn>0.2</eqn>
+				<units>Dimensionless</units>
+			</aux>
+			<aux name="Ratio of Supply to Demand">
+				<eqn>Average_Annual_MWh_from_Hydrogen/Electricity_Storage_Demand</eqn>
+				<units>Dimensionless</units>
+			</aux>
+			<aux name="Effect of Supply to Demand Ratio on Investments">
+				<eqn>Ratio_of_Supply_to_Demand</eqn>
+				<gf>
+					<xscale min="0" max="1.03"/>
+					<yscale min="0" max="1"/>
+					<ypts>1,0.9954,0.9879,0.9755,0.9552,0.922,0.8676,0.7784,0.6322,0.3926,0</ypts>
+				</gf>
+				<units>Dimensionless</units>
+			</aux>
+			<aux name="Electrolysis Plant Efficiency">
+				<doc>https://search.lib.jmu.edu/permalink/01JMU_INST/1jlet4m/alma991004417429706271</doc>
+				<eqn>.625</eqn>
+				<units>Dimensionless</units>
+			</aux>
+			<aux name="MWh per Ton of Hydrogen ( E efficiency)">
+				<eqn>MWh_per_Ton_of_Hydrogen*Electrolysis_Plant_Efficiency</eqn>
+				<units>MWh/Tons</units>
+			</aux>
+			<aux name="Hydrogen Fuel\nCell Efficiency">
+				<doc>https://www.sciencedirect.com/book/9780444536884/pem-fuel-cell-testing-and-diagnosis?via=ihub=</doc>
+				<eqn>.353</eqn>
+				<units>Dimensionless</units>
+			</aux>
+			<aux name="Actual MWh per Ton of Hydrogen">
+				<eqn>&quot;MWh_per_Ton_of_Hydrogen_(_E_efficiency)&quot;*Hydrogen_Fuel_Cell_Efficiency*Hydrogen_Fuel_Cell_Capacity_Factor</eqn>
+				<units>MWh/Tons</units>
+			</aux>
+			<aux name="Political Will">
+				<eqn>Ratio_of_Supply_to_Demand</eqn>
+				<units>Dimensionless</units>
+			</aux>
+			<stock name="Cumulative Cost">
+				<eqn>0</eqn>
+				<inflow>Added_Cost</inflow>
+				<units>Dollars</units>
+			</stock>
+			<flow name="Added Cost">
+				<eqn>Electrolysis_Plant_Costs+Fuel_Cell_Costs+&quot;R&amp;D_Investment&quot;+&quot;R&amp;D_Investment(FC)&quot;+Yearly_Cost_to_Revamp_Plants+Price_of_electricity_for_producing_carbon</eqn>
+				<non_negative/>
+				<units>Dollars/Years</units>
+			</flow>
+			<aux name="Electrolysis Plant Costs">
+				<eqn>Additions_to_Electrolysis_Plants*Cost_Per_Plant</eqn>
+				<units>Dollar/Years</units>
+			</aux>
+			<aux name="Fuel Cell Costs">
+				<eqn>&quot;Cost_Per_Plant(FC)&quot;*Additions_to_Fuel_Cell_Plants</eqn>
+				<units>Dollar/Years</units>
+			</aux>
+			<stock name="Average Annual\nCost">
+				<eqn>0</eqn>
+				<inflow>Net_Change_in_Average_Annual_Cost</inflow>
+				<units>Dollars/Years</units>
+			</stock>
+			<flow name="Net Change in Average Annual Cost">
+				<eqn>(Added_Cost-Average_Annual_Cost)/Time_to_Adjust_Yearly_Spending</eqn>
+				<units>Dollars/Years/Years</units>
+			</flow>
+			<aux name="Time to Adjust\nYearly Spending">
+				<eqn>3</eqn>
+				<units>Years</units>
+			</aux>
+			<aux name="Initial Investment\nin Plants">
+				<eqn>750e6</eqn>
+				<units>Dollars</units>
+			</aux>
+			<aux name="Price per MWh">
+				<eqn>150</eqn>
+				<units>Dollars/MWh</units>
+			</aux>
+			<aux name="Income from Electricity Sales">
+				<eqn>Average_Annual_MWh_from_Hydrogen*Price_per_MWh</eqn>
+				<units>Dollars/Years</units>
+			</aux>
+			<aux name="Fraction of Electricity\nIncome Reinvested">
+				<eqn>.1</eqn>
+				<units>Dimensionless</units>
+			</aux>
+			<aux name="Income from Electricity Sales Reinvested">
+				<eqn>Fraction_of_Electricity_Income_Reinvested*Income_from_Electricity_Sales</eqn>
+				<units>Dollars/Years</units>
+			</aux>
+			<stock name="Hydrogen From\nPlants">
+				<eqn>0</eqn>
+				<inflow>Additions_to_Hydrogen_per_Plant</inflow>
+				<outflow>Hydrogen_per_Plant_Removed</outflow>
+				<units>Tons/Year</units>
+			</stock>
+			<flow name="Additions to Hydrogen\nper Plant">
+				<eqn>Additions_to_Electrolysis_Plants*Tons_per_Plant_Per_year*&quot;Implementation_Delay_(F/y)&quot;</eqn>
+				<non_negative/>
+				<units>Tons/Year/Years</units>
+			</flow>
+			<flow name="Hydrogen per\nPlant Removed">
+				<eqn>Average_Hydrogen_per_Plant*Plants_Retired</eqn>
+				<non_negative/>
+				<units>Tons/Year/Years</units>
+			</flow>
+			<aux name="Average Hydrogen per Plant">
+				<eqn>(Hydrogen_From_Plants)//(&quot;Electrolysis_Plants/Facilities&quot;)</eqn>
+				<units>Tons/Year/Plant</units>
+			</aux>
+			<group name="Hydrogen Production" run="false">
+				<entity name='"(Investment/cost)_Implementation_time"'/>
+				<entity name='"Electrolysis_Plants/Facilities"'/>
+				<entity name='"MWh_per_Ton_of_Hydrogen_(_E_efficiency)"'/>
+				<entity name='"TWh/Million_Tonnes_of_Hydrogen"'/>
+				<entity name="Actual_MWh_per_Ton_of_Hydrogen"/>
+				<entity name="Additions_to_Electrolysis_Plants"/>
+				<entity name="Additions_to_Hydrogen_per_Plant"/>
+				<entity name="Adjustment_Time_for_Average_Annual_Hydrogen_Per_Year"/>
+				<entity name="Adjustment_Time_for_Electrolyzers"/>
+				<entity name="Average_Annual_Hydrogen_Per_Year"/>
+				<entity name="Average_Annual_Hydrogen_Per_Year_at_Capacity"/>
+				<entity name="Average_Annual_MWh_from_Hydrogen"/>
+				<entity name="Average_Electrolysers_Per_Plant"/>
+				<entity name="Average_Hydrogen_per_Plant"/>
+				<entity name="Average_Life_of_Electrolyzers"/>
+				<entity name="Capacity_Factor_for_Electrolysis_Plants"/>
+				<entity name="Cost_of_ELectricity_per_ton_hydrogen"/>
+				<entity name="Cost_Per_Plant"/>
+				<entity name="Current_life_span"/>
+				<entity name="Desired_Number_of_Electrolyzers"/>
+				<entity name="Effect_of_Supply_to_Demand_Ratio_on_Investments"/>
+				<entity name="Electrolysers_Per_Plant"/>
+				<entity name="Electrolysis_Plant_Efficiency"/>
+				<entity name="Electrolyzers"/>
+				<entity name="Electrolyzers_Removed"/>
+				<entity name="Fraction_of_Electricity_Income_Reinvested"/>
+				<entity name="Hydrogen_From_Plants"/>
+				<entity name="Hydrogen_per_Plant_Removed"/>
+				<entity name="Hydrogen_per_year"/>
+				<entity name="Income_from_Electricity_Sales"/>
+				<entity name="Income_from_Electricity_Sales_Reinvested"/>
+				<entity name="Initial_Investment_in_Plants"/>
+				<entity name="Initial_Life_Span"/>
+				<entity name="Investment_in_Plants_1"/>
+				<entity name="Millions_of_Tons_to_Tons"/>
+				<entity name="Money_for_New_Plants"/>
+				<entity name="MWh_per_Million_Tons_of_Hydrogen"/>
+				<entity name="MWh_per_Ton_of_Hydrogen"/>
+				<entity name="MWh_to_TWh"/>
+				<entity name="Needed_Electrolyzers"/>
+				<entity name="Net_Change_in_Average_Annual_Hydrogen_Per_Year"/>
+				<entity name="New_Investment"/>
+				<entity name="Percent_of_income_from_electricity_sales_reinvested_in_plants"/>
+				<entity name="Plants_Retired"/>
+				<entity name="Political_Will"/>
+				<entity name="Price_of_electricity_for_producing_carbon"/>
+				<entity name="Price_per_MWh"/>
+				<entity name="Ratio_of_Supply_to_Demand"/>
+				<entity name="Revamped_Electrolyzers"/>
+				<entity name="Spending"/>
+				<entity name="Time_for_Spending"/>
+				<entity name="Tons_per_Plant_Per_year"/>
+				<entity name="Tons_to_Tonnes"/>
+				<entity name="Total_electricity_used_for_hydrogen"/>
+				<entity name="TWh_per_Million_Tons_of_Hydrogen"/>
+				<entity name="Wholesale_price_of_electricity"/>
+			</group>
+			<group name="Government Spending" run="false">
+				<entity name='"Additions_to_R&amp;D"'/>
+				<entity name='"Effectiveness_of_R&amp;D_Spending"'/>
+				<entity name='"Implementation_Delay_(F/y)"'/>
+				<entity name='"Minimum_R&amp;D_for_Sources"'/>
+				<entity name='"Percent_of_Income_from_Electricity_Sales_Reinvested_in_R&amp;D"'/>
+				<entity name='"R&amp;D"'/>
+				<entity name='"R&amp;D/$_invested"'/>
+				<entity name='"R&amp;D_Investment"'/>
+				<entity name='"Ratio_of_R&amp;D_to_minimum"'/>
+				<entity name='"Time_to_allocate_Gov._Funding"'/>
+				<entity name="Government_Funding"/>
+				<entity name="New_RD_Funding_2"/>
+				<entity name="Time_for_Implementation_Delay"/>
+			</group>
+			<group name="Economics" run="false">
+				<entity name="Added_Cost"/>
+				<entity name="Additions_to_Profit"/>
+				<entity name="Annual_Profit"/>
+				<entity name="Average_Annual_Cost"/>
+				<entity name="Average_Cost_to_Revamp_Plant"/>
+				<entity name="Cost_to_Revamp_Electrolyzers"/>
+				<entity name="Cumulative_Cost"/>
+				<entity name="Electrolysis_Plant_Costs"/>
+				<entity name="Fraction_of_Plant_Cost_for_Electrolyzers"/>
+				<entity name="Fuel_Cell_Costs"/>
+				<entity name="Net_Change_in_Average_Annual_Cost"/>
+				<entity name="Net_Change_in_Average_Annual_Profit"/>
+				<entity name="Plants_Revamped"/>
+				<entity name="Time_to_Adjust_Yearly_Spending"/>
+				<entity name="Total_Profit"/>
+				<entity name="Yearly_Cost_to_Revamp_Plants"/>
+			</group>
+			<group name="Electricity Demand" run="false">
+				<entity name='"Electricity_Demand_per_Capita(2025)"'/>
+				<entity name="Adjustment_Time_For_Growth"/>
+				<entity name="Adjustment_Time_for_Overall_Electricity_Demand"/>
+				<entity name="Demand_for_Electricity"/>
+				<entity name="Demand_Returning_to_Normal"/>
+				<entity name="Electricity_Demand_Growth_per_Year"/>
+				<entity name="Electricity_Storage_Demand"/>
+				<entity name="Fraction_of_Electricity_Needed_for_Storage"/>
+				<entity name="Growth_in_Electricity_Demand"/>
+				<entity name="Initial_Growth_Factor"/>
+				<entity name="New_Growth_in_Electricity_Demand"/>
+				<entity name="New_Growth_in_Electricity_Demand_Fraction"/>
+				<entity name="Overall_Electricity_Demand"/>
+				<entity name="Scenario_for_Growth_in_Demand"/>
+				<entity name="Time_for_Growth_to_Start"/>
+				<entity name="Time_for_Growth_to_Stop"/>
+				<entity name="Time_to_Return_to_Normal"/>
+			</group>
+			<aux name="Percent of income from electricity sales reinvested in plants">
+				<doc>https://einvestingforbeginners.com/rd-spending-as-a-percentage-of-revenue-by-industry/</doc>
+				<eqn>1-&quot;Percent_of_Income_from_Electricity_Sales_Reinvested_in_R&amp;D&quot;</eqn>
+				<units>Dimensionless</units>
+			</aux>
+			<aux name="Average Annual Hydrogen Per Year at Capacity">
+				<eqn>Average_Annual_Hydrogen_Per_Year*Capacity_Factor_for_Electrolysis_Plants</eqn>
+				<units>Tons/Year</units>
+			</aux>
+			<aux name="Capacity Factor for Electrolysis Plants">
+				<eqn>0.9</eqn>
+				<units>Dimensionless</units>
+			</aux>
+			<aux name="Hydrogen Fuel Cell Capacity Factor">
+				<doc>https://www.hydrogen.energy.gov/docs/hydrogenprogramlibraries/pdfs/review16/tv016_saur_2016_p.pdf</doc>
+				<eqn>.892</eqn>
+				<units>Dimensionless</units>
+			</aux>
+			<aux name="Percent of Income from Electricity Sales Reinvested in R&amp;D">
+				<doc>https://einvestingforbeginners.com/rd-spending-as-a-percentage-of-revenue-by-industry/</doc>
+				<eqn>0.006</eqn>
+				<units>Dimensionless</units>
+			</aux>
+			<stock name="Total Profit">
+				<eqn>0</eqn>
+				<inflow>Additions_to_Profit</inflow>
+				<units>Dollars</units>
+			</stock>
+			<flow name="Additions to Profit">
+				<eqn>Income_from_Electricity_Sales-Added_Cost</eqn>
+				<units>Dollars/Years</units>
+			</flow>
+			<aux name="Money for\nNew Plants">
+				<eqn>Cost_Per_Plant*Plants_Retired</eqn>
+				<units>Dollars/Years</units>
+			</aux>
+			<stock name="Electrolyzers">
+				<eqn>0</eqn>
+				<inflow>Revamped_Electrolyzers</inflow>
+				<outflow>Electrolyzers_Removed</outflow>
+				<units>Electrolyzers</units>
+			</stock>
+			<flow name="Revamped\nElectrolyzers">
+				<eqn>(Needed_Electrolyzers/Adjustment_Time_for_Electrolyzers)</eqn>
+				<non_negative/>
+				<units>Electrolyzers/Years</units>
+			</flow>
+			<flow name="Electrolyzers\nRemoved">
+				<eqn>Electrolyzers/Average_Life_of_Electrolyzers</eqn>
+				<non_negative/>
+				<units>Electrolyzers/Years</units>
+			</flow>
+			<aux name="Average Life\nof Electrolyzers">
+				<eqn>6</eqn>
+				<units>Years</units>
+			</aux>
+			<aux name="Electrolysers Per Plant">
+				<doc>https://austinpowereng.com/Fuel%20cell/Yang_AustinPower%20H2Electrolysis%20FCS2019.pdf</doc>
+				<eqn>4</eqn>
+				<units>Electrolyzers/Plant</units>
+			</aux>
+			<aux name="Desired Number\nof Electrolyzers">
+				<eqn>Electrolysers_Per_Plant*&quot;Electrolysis_Plants/Facilities&quot;</eqn>
+				<units>Electrolyzers</units>
+			</aux>
+			<aux name="Needed\nElectrolyzers">
+				<eqn>Desired_Number_of_Electrolyzers-Electrolyzers</eqn>
+				<units>Electrolyzers</units>
+			</aux>
+			<aux name="Adjustment Time for Electrolyzers">
+				<eqn>1</eqn>
+				<units>Years</units>
+			</aux>
+			<aux name="Cost to Revamp\nElectrolyzers">
+				<eqn>2000000</eqn>
+				<units>Dollars/MWh</units>
+			</aux>
+			<aux name="Average Cost to\nRevamp Plant">
+				<eqn>Cost_Per_Plant*Fraction_of_Plant_Cost_for_Electrolyzers</eqn>
+				<units>Dollars/Plant</units>
+			</aux>
+			<aux name="Plants Revamped">
+				<eqn>Electrolyzers_Removed/Electrolysers_Per_Plant</eqn>
+				<units>Plant/Years</units>
+			</aux>
+			<aux name="Yearly Cost to\nRevamp Plants">
+				<eqn>Average_Cost_to_Revamp_Plant*Plants_Revamped</eqn>
+				<units>Dollars/Years</units>
+			</aux>
+			<aux name="Fraction of Plant Cost for Electrolyzers">
+				<doc>https://www.energypolicy.columbia.edu/demystifying-electrolyzer-production-costs/</doc>
+				<eqn>0.3</eqn>
+				<units>Dimensionless</units>
+			</aux>
+			<stock name="Annual\nProfit">
+				<eqn>0</eqn>
+				<inflow>Net_Change_in_Average_Annual_Profit</inflow>
+				<units>Dollars/Years</units>
+			</stock>
+			<flow name="Net Change in Average Annual Profit">
+				<eqn>(Additions_to_Profit-Annual_Profit)/Time_to_Adjust_Yearly_Spending</eqn>
+				<units>Dollars/Years/Years</units>
+			</flow>
+			<aux name="Average Electrolysers\nPer Plant">
+				<eqn>Electrolyzers//&quot;Electrolysis_Plants/Facilities&quot;</eqn>
+				<units>Electrolyzers/Plant</units>
+			</aux>
+			<flow name="Net Change in Populaiton">
+				<eqn>Population*Current_Growth_Rate</eqn>
+				<non_negative/>
+				<units>People/Years</units>
+			</flow>
+			<stock name="Population">
+				<doc>https://www.sciencedirect.com/science/article/pii/S2215017X20300813</doc>
+				<eqn>8.6e6</eqn>
+				<inflow>Net_Change_in_Populaiton</inflow>
+				<units>People</units>
+			</stock>
+			<aux name="Ratio of Population to Maximum">
+				<eqn>Population/Maximum_Population</eqn>
+				<units>fraction</units>
+			</aux>
+			<aux name="Current Growth Rate">
+				<eqn>Normal_Birth_Rate*Effect_of_the_ratio_on_population_growth</eqn>
+				<units>fraction/Year</units>
+			</aux>
+			<aux name="Virginia's Historical Population">
+				<doc>https://www.sciencedirect.com/science/article/pii/S2215017X20300813
+
+Initial Population in 200</doc>
+				<eqn>TIME</eqn>
+				<gf>
+					<yscale min="0" max="100"/>
+					<xpts>2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2030,2040,2050,2051</xpts>
+					<ypts>7107050,7204928,7302731,7386346,7510260,7600467,7683718,7749603,7854031,7928779,8025514,8096604,8185867,8260405,8326289,8382993,8411808,8470020,8517685,8535519,8586967,9129002,9759371,10535810,NaN</ypts>
+				</gf>
+				<units>People</units>
+			</aux>
+			<aux name="Effect of the ratio on population growth">
+				<eqn>1-Ratio_of_Population_to_Maximum</eqn>
+				<units>fraction</units>
+			</aux>
+			<aux name="Normal Birth Rate">
+				<eqn>.0193</eqn>
+				<units>fraction/Year</units>
+			</aux>
+			<aux name="Maximum Population">
+				<doc>Modelers estimate </doc>
+				<eqn>15e6</eqn>
+				<units>People</units>
+			</aux>
+			<group name="Population Sector" run="false">
+				<entity name="Current_Growth_Rate"/>
+				<entity name="Effect_of_the_ratio_on_population_growth"/>
+				<entity name="Maximum_Population"/>
+				<entity name="Net_Change_in_Populaiton"/>
+				<entity name="Normal_Birth_Rate"/>
+				<entity name="Population"/>
+				<entity name="Ratio_of_Population_to_Maximum"/>
+				<entity name="Virginia's_Historical_Population"/>
+			</group>
+			<aux name="Historical Coal Generation in mWh">
+				<doc>${Historical Data}
+Source:  https://www.eia.gov/electricity/data/browser/#/topic/0?agg=2,0,1&amp;fuel=vtvvk&amp;geo=g0000001&amp;sec=008&amp;linechart=ELEC.GEN.ALL-US-98.A&amp;columnchart=ELEC.GEN.ALL-US-98.A&amp;map=ELEC.GEN.ALL-US-98.A&amp;freq=A&amp;ctype=linechart&amp;ltype=pin&amp;rtype=s&amp;pin=&amp;rse=0&amp;maptype=0
+
+
+Also, see the spreadsheet where the original data set resides.  Sheet two contains the data set up to be imported into Stella and the data was converted from thousands of mW*h to megawatt hours.  </doc>
+				<eqn>TIME</eqn>
+				<gf>
+					<yscale min="0" max="100"/>
+					<xpts>2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024</xpts>
+					<ypts>NaN,37028000,37015000,36122000,34741000,34604000,33446000,34618000,30840000,24798000,24732000,19202000,13543000,20626000,20340000,16901000,16215000,10523000,9078000,3247000,3639000,3113000,3224000,1325000,NaN</ypts>
+				</gf>
+				<units>mWh</units>
+			</aux>
+			<aux name="Historical Gas Generation in mWh">
+				<doc>${Historical Data}
+Source:  https://www.eia.gov/electricity/data/browser/#/topic/0?agg=2,0,1&amp;fuel=vtvvk&amp;geo=g0000001&amp;sec=008&amp;linechart=ELEC.GEN.ALL-US-98.A&amp;columnchart=ELEC.GEN.ALL-US-98.A&amp;map=ELEC.GEN.ALL-US-98.A&amp;freq=A&amp;ctype=linechart&amp;ltype=pin&amp;rtype=s&amp;pin=&amp;rse=0&amp;maptype=0
+
+
+Also, see the spreadsheet where the original data set resides.  Sheet two contains the data set up to be imported into Stella and the data was converted from thousands of mW*h to megawatt hours.  </doc>
+				<eqn>TIME</eqn>
+				<gf>
+					<yscale min="0" max="100"/>
+					<xpts>2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024</xpts>
+					<ypts>NaN,3931000,3882000,4262000,6116000,7981000,7006000,10759000,9182000,12052000,16915000,18238000,24820000,22403000,20577000,32747000,40266000,43817000,49401000,57195000,61785000,52793000,48014000,50570000,NaN</ypts>
+				</gf>
+				<units>mWh</units>
+			</aux>
+			<aux name="Historical Nuclear Generation in mWh">
+				<doc>${Historical Data}
+Source:  https://www.eia.gov/electricity/data/browser/#/topic/0?agg=2,0,1&amp;fuel=vtvvk&amp;geo=g0000001&amp;sec=008&amp;linechart=ELEC.GEN.ALL-US-98.A&amp;columnchart=ELEC.GEN.ALL-US-98.A&amp;map=ELEC.GEN.ALL-US-98.A&amp;freq=A&amp;ctype=linechart&amp;ltype=pin&amp;rtype=s&amp;pin=&amp;rse=0&amp;maptype=0
+
+
+Also, see the spreadsheet where the original data set resides.  Sheet two contains the data set up to be imported into Stella and the data was converted from thousands of mW*h to megawatt hours.  </doc>
+				<eqn>TIME</eqn>
+				<gf>
+					<yscale min="0" max="100"/>
+					<xpts>2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024</xpts>
+					<ypts>NaN,25759000,27346000,24816000,28315000,27918000,27594000,27268000,27931000,28212000,26572000,25548000,28723000,29326000,30221000,28060000,29732000,30554000,29252000,29498000,30140000,28572000,28197000,29663000,NaN</ypts>
+				</gf>
+				<units>mWh</units>
+			</aux>
+			<aux name="Historical Wind Generation in mWh">
+				<doc>${Historical Data}
+Source:  https://www.eia.gov/electricity/data/browser/#/topic/0?agg=2,0,1&amp;fuel=vtvvk&amp;geo=g0000001&amp;sec=008&amp;linechart=ELEC.GEN.ALL-US-98.A&amp;columnchart=ELEC.GEN.ALL-US-98.A&amp;map=ELEC.GEN.ALL-US-98.A&amp;freq=A&amp;ctype=linechart&amp;ltype=pin&amp;rtype=s&amp;pin=&amp;rse=0&amp;maptype=0
+
+
+Also, see the spreadsheet where the original data set resides.  Sheet two contains the data set up to be imported into Stella and the data was converted from thousands of mW*h to megawatt hours.  </doc>
+				<eqn>TIME</eqn>
+				<gf>
+					<yscale min="0" max="100"/>
+					<xpts>2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024</xpts>
+					<ypts>NaN,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,50000,51000,47000,NaN</ypts>
+				</gf>
+				<units>mWh</units>
+			</aux>
+			<aux name="Historical Solar Generation in mWh">
+				<doc>${Historical Data}
+Source:  https://www.eia.gov/electricity/data/browser/#/topic/0?agg=2,0,1&amp;fuel=vtvvk&amp;geo=g0000001&amp;sec=008&amp;linechart=ELEC.GEN.ALL-US-98.A&amp;columnchart=ELEC.GEN.ALL-US-98.A&amp;map=ELEC.GEN.ALL-US-98.A&amp;freq=A&amp;ctype=linechart&amp;ltype=pin&amp;rtype=s&amp;pin=&amp;rse=0&amp;maptype=0
+
+
+Also, see the spreadsheet where the original data set resides.  Sheet two contains the data set up to be imported into Stella and the data was converted from thousands of mW*h to megawatt hours.  </doc>
+				<eqn>TIME</eqn>
+				<gf>
+					<yscale min="0" max="100"/>
+					<xpts>2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024</xpts>
+					<ypts>NaN,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21000,313000,763000,947000,1369000,3266000,4624000,5354000,NaN</ypts>
+				</gf>
+				<units>mWh</units>
+			</aux>
+			<aux name="Historical Biomass Generation mWh">
+				<doc>${Historical Data}
+Source:  https://www.eia.gov/electricity/data/browser/#/topic/0?agg=2,0,1&amp;fuel=vtvvk&amp;geo=g0000001&amp;sec=008&amp;linechart=ELEC.GEN.ALL-US-98.A&amp;columnchart=ELEC.GEN.ALL-US-98.A&amp;map=ELEC.GEN.ALL-US-98.A&amp;freq=A&amp;ctype=linechart&amp;ltype=pin&amp;rtype=s&amp;pin=&amp;rse=0&amp;maptype=0
+
+
+Also, see the spreadsheet where the original data set resides.  Sheet two contains the data set up to be imported into Stella and the data was converted from thousands of mW*h to megawatt hours.  </doc>
+				<eqn>TIME</eqn>
+				<gf>
+					<yscale min="0" max="100"/>
+					<xpts>2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024</xpts>
+					<ypts>NaN,420000,727000,806000,958000,974000,926000,957000,1068000,964000,1037000,1004000,1127000,1427000,2187000,2318000,2331000,2073000,2455000,2143000,1888000,2108000,1978000,1658000,NaN</ypts>
+				</gf>
+				<units>mWh</units>
+			</aux>
+			<aux name="Historical Pumped\nStorage Generation in mWh">
+				<doc>${Historical Data}
+Source:  https://www.eia.gov/electricity/data/browser/#/topic/0?agg=2,0,1&amp;fuel=vtvvk&amp;geo=g0000001&amp;sec=008&amp;linechart=ELEC.GEN.ALL-US-98.A&amp;columnchart=ELEC.GEN.ALL-US-98.A&amp;map=ELEC.GEN.ALL-US-98.A&amp;freq=A&amp;ctype=linechart&amp;ltype=pin&amp;rtype=s&amp;pin=&amp;rse=0&amp;maptype=0
+
+
+Also, see the spreadsheet where the original data set resides.  Sheet two contains the data set up to be imported into Stella and the data was converted from thousands of mW*h to megawatt hours.  </doc>
+				<eqn>TIME</eqn>
+				<gf>
+					<yscale min="0" max="1000000"/>
+					<xpts>2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024</xpts>
+					<ypts>NaN,-2240000,-1989000,-1498000,-1166000,-1421000,-1167000,-1620000,-1638000,-1335000,-1491000,-1470000,-1366000,-1189000,-1295000,-1036000,-1163000,-1278000,-1292000,-1104000,-1080000,-1039000,-1502000,-1455000,NaN</ypts>
+				</gf>
+				<units>mWh</units>
+			</aux>
+			<aux name="Historical Demand for Electricity">
+				<doc>${Historical Data}
+Sources: U.S. Energy Information Administration, Form EIA-860, Annual Electric Generator Report. U.S. Energy Information Administration, Form   EIA-861, Annual Electric Power Industry Report. U.S. Energy Information Administration, Form EIA-923, Power Plant Operations Report and predecessor forms.</doc>
+				<eqn>TIME</eqn>
+				<gf>
+					<yscale min="0" max="100"/>
+					<xpts>1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024</xpts>
+					<ypts>81441946,84129416,86030818,91680819,92205125,95862671,98395781,97981643,101207918,104603431,108430997,106747551,112217393,113022816,118358364,121319489,118747270,122847762,121254760,118780928,123824956,119583344,117557203,120568574,120961680,122083461,122227127,121060411,127790327,127927182,126357609,134580341,141600023,141199686,NaN</ypts>
+				</gf>
+				<units>MWh/Years</units>
+			</aux>
+			<group name="Historical Data Center Sector" run="false">
+				<entity name="Historical_Biomass_Generation_mWh"/>
+				<entity name="Historical_Coal_Generation_in_mWh"/>
+				<entity name="Historical_Demand_for_Electricity"/>
+				<entity name="Historical_Gas_Generation_in_mWh"/>
+				<entity name="Historical_Nuclear_Generation_in_mWh"/>
+				<entity name="Historical_Pumped_Storage_Generation_in_mWh"/>
+				<entity name="Historical_Solar_Generation_in_mWh"/>
+				<entity name="Historical_Wind_Generation_in_mWh"/>
+			</group>
+			<aux name="Cost of ELectricity\nper ton hydrogen">
+				<eqn>15</eqn>
+				<units>MWh/Tons</units>
+			</aux>
+			<aux name="Total electricity used\nfor hydrogen">
+				<eqn>Average_Annual_Hydrogen_Per_Year*Cost_of_ELectricity_per_ton_hydrogen</eqn>
+				<units>MWh/Years</units>
+			</aux>
+			<aux name="Wholesale price\nof electricity">
+				<eqn>100</eqn>
+				<units>Dollars/MWh</units>
+			</aux>
+			<aux name="Price of electricity\nfor producing carbon">
+				<eqn>Wholesale_price_of_electricity*Total_electricity_used_for_hydrogen</eqn>
+				<units>Dollars/Years</units>
+			</aux>
+			<aux name="Hydrogen per Plant">
+				<eqn>637.19</eqn>
+				<units>Tons/Plant/Year</units>
+			</aux>
+			<aux name="Demand for\nHydrogen">
+				<eqn>&quot;Fuel_Cell_Plants/Facilities&quot;*Hydrogen_per_Plant</eqn>
+				<units>Tons/Year</units>
+			</aux>
+		</variables>
+		<views>
+			<style color="black" background="white" font_style="normal" font_weight="normal" text_decoration="none" text_align="center" vertical_text_align="center" font_color="black" font_family="Arial" font_size="10pt" padding="2" border_color="black" border_width="thin" border_style="none">
+				<text_box color="black" background="white" text_align="left" vertical_text_align="top" font_size="12pt"/>
+				<isee:loop_indicator color="black" background="white" text_align="left" vertical_text_align="top" font_size="12pt"/>
+				<numeric_display color="white" background="white" font_size="12pt" border_width="thin" border_style="solid" isee:transparent="false" isee:show_divider="true" isee:show_bounding_box="true" label_side="left"/>
+				<graph color="black" background="white" font_size="12pt" axis_color="#666666" grid_color="#C8C8C8" isee:graph_area_color="white" legend_position="bottom" isee:transparent="false" isee:hide_border="false" axis_title_font_style="normal" axis_title_font_weight="normal" axis_title_text_decoration="none" axis_title_text_align="center" axis_title_vertical_text_align="center" axis_title_font_color="black" axis_title_font_family="Arial" axis_title_font_size="12pt" axis_title_text_padding="2" axis_title_text_border_color="black" axis_title_text_border_width="thin" axis_title_text_border_style="none" axis_label_font_style="normal" axis_label_font_weight="normal" axis_label_text_decoration="none" axis_label_text_align="center" axis_label_vertical_text_align="center" axis_label_font_color="black" axis_label_font_family="Arial" axis_label_font_size="9pt" axis_label_text_padding="2" axis_label_text_border_color="black" axis_label_text_border_width="thin" axis_label_text_border_style="none">
+					<isee:series_styles>
+						<isee:series_style color="blue" thickness="1"/>
+						<isee:series_style color="red" thickness="1" pen_style="dot_dashed"/>
+						<isee:series_style color="fuchsia" thickness="1" pen_style="dotted"/>
+						<isee:series_style color="#008F44" thickness="1" pen_style="dashed"/>
+						<isee:series_style color="#FF7F00" thickness="1"/>
+						<isee:series_style color="#7F00FF" thickness="1" pen_style="dot_dashed"/>
+						<isee:series_style color="#0CA0FF" thickness="1" pen_style="dotted"/>
+						<isee:series_style color="lime" thickness="1" pen_style="dashed"/>
+						<isee:series_style color="#FF007F" thickness="1"/>
+						<isee:series_style color="aqua" thickness="1" pen_style="dot_dashed"/>
+						<isee:series_style color="#F586FF" thickness="1" pen_style="dotted"/>
+						<isee:series_style color="black" thickness="1" pen_style="dashed"/>
+						<isee:series_style color="#C8C8C8" thickness="1"/>
+					</isee:series_styles>
+				</graph>
+				<table color="black" background="#E0E0E0" text_align="right" font_size="12pt" orientation="vertical" wrap_text="false" isee:auto_fit="true" isee:use_alternate_row_colors="false" isee:unlimited_table_length="false" blank_column_width="80" column_width="160" interval="1" report_balances="beginning" report_flows="summed" header_font_style="normal" header_font_weight="normal" header_text_decoration="none" header_text_align="center" header_vertical_text_align="center" header_font_color="black" header_font_family="Arial" header_font_size="12pt" header_text_padding="2" header_text_border_color="black" header_text_border_width="thin" header_text_border_style="none"/>
+				<button color="black" background="#E0E0E0" font_size="12pt" border_width="thin" border_style="solid" transparent="false" corner_radius="0" isee:flat="false" icon_side="top" isee:highlight_on_hover="false" isee:highlight_color="#959595"/>
+				<isee:annotation color="black" background="#E0E0E0" font_size="12pt" border_width="thin" border_style="solid" transparent="false" corner_radius="0" isee:flat="false" icon_side="top" isee:highlight_on_hover="false" isee:highlight_color="#959595" popup_corner_radius="0" popup_background_color="#FFFECF"/>
+				<slider color="#66CC66" background="#E0E0E0" font_size="12pt" num_ticks="3" label_side="top" wrap_title="true" vertical="false" isee:fancy_appearance="false" isee:show_hover_tip="when_deciding" input_expands="true" input_width="100"/>
+				<isee:stacked_container color="black" background="white" text_align="left" vertical_text_align="top" font_size="12pt" padding="6 8" border_color="#999999" border_width="thin" border_style="solid" item_spacing="0" corner_radius="4" selected_item_color="black" selected_item_background="white" item_background="#DDDDDD" transparent_bg="false"/>
+				<isee:dual_slider color="#66CC66" background="silver" font_size="12pt" num_ticks="3" label_side="top" wrap_title="true" isee:show_hover_tip="when_deciding" input_expands="true" input_width="100"/>
+				<isee:sim_speed_slider color="black" background="white"/>
+				<isee:time_slider color="#E95F74" background="silver"/>
+				<isee:pie_input color="black" background="white" font_size="12pt" legend_position="bottom" isee:transparent="false"/>
+				<knob color="#66CC66" background="#E0E0E0" font_size="12pt" label_side="bottom" wrap_title="true"/>
+				<numeric_input color="black" background="#E0E0E0" font_size="12pt" label_side="left" wrap_title="true" input_expands="false" input_width="100"/>
+				<isee:dropdown_input color="black" background="white" font_size="12pt" label_side="left" wrap_title="true" input_expands="false" input_width="100"/>
+				<switch color="black" background="#E0E0E0" font_size="12pt" label_side="top" wrap_title="true" isee:appearance="switch" isee:on_color="green"/>
+				<options color="black" background="white" appearance="radio-buttons" arrangement="vertical"/>
+				<graphical_input color="black" background="#E0E0E0" font_size="12pt" isee:show_hover_tip="true"/>
+				<group_input color="black" background="#E0E0E0" font_size="12pt"/>
+				<lamp color="black" background="white" font_size="9pt"/>
+				<gauge color="black" background="white" font_size="9pt" needle_color="#F09F72" bar_color="#EEEEEE" bar_progress_color="black" appearance="radial" num_major_ticks="11" num_minor_ticks="11" show_numeric_value="true"/>
+				<isee:spatial_map color="black" background="white" font_size="12pt"/>
+				<isee:animation_object color="black" background="white" font_size="12pt"/>
+				<isee:navigation_widget color="black" background="white" text_align="left" vertical_text_align="top" font_size="12pt" padding="6 8" border_color="#999999" border_width="thin" border_style="solid" item_spacing="6" appearance="tabs" corner_radius="4" selected_item_color="black" selected_item_background="white" item_background="#DDDDDD" transparent_bg="false"/>
+				<isee:shape color="black" background="white" text_align="left" vertical_text_align="top" font_size="12pt" border_width="thin" border_style="solid" opacity="1" transparent_background="true" corner_radius="1"/>
+				<isee:selector color="black" background="white" text_align="left" vertical_text_align="top" font_size="12pt"/>
+				<isee:iframe color="black" background="white" text_align="left" vertical_text_align="top" font_size="12pt" border_width="thin" border_style="solid"/>
+				<isee:financial_table color="black" background="#E0E0E0" text_align="right" font_size="12pt" hide_border="false" auto_fit="true" first_column_width="250" other_column_width="100" header_font_style="normal" header_font_weight="bold" header_text_decoration="none" header_text_align="center" header_vertical_text_align="center" header_font_color="black" header_font_family="Arial" header_font_size="14pt" header_text_padding="2" header_text_border_color="black" header_text_border_width="thin" header_text_border_style="none"/>
+			</style>
+			<view isee:show_pages="false" background="white" page_width="1056" page_height="816" isee:page_cols="14" isee:page_rows="5" isee:scroll_x="1500" isee:scroll_y="1520" isee:popup_graphs_are_comparative="true" isee:enable_non_negative_highlights="false" type="stock_flow">
+				<style color="black" background="white" font_style="normal" font_weight="normal" text_decoration="none" text_align="center" vertical_text_align="center" font_color="black" font_family="Arial" font_size="10pt" padding="2" border_color="black" border_width="thin" border_style="none">
+					<stock color="blue" background="white" font_color="blue" font_size="9pt" label_side="top">
+						<shape type="rectangle" width="45" height="35"/>
+					</stock>
+					<flow color="blue" background="white" font_color="blue" font_size="9pt" label_side="bottom">
+						<shape type="circle" radius="18"/>
+					</flow>
+					<isee:placeholder color="#228B22" background="white" font_color="#228B22" font_size="9pt" label_side="bottom"/>
+					<module color="blue" background="white" font_color="blue" font_size="9pt" label_side="top">
+						<shape type="rectangle" width="55" height="45"/>
+					</module>
+					<aux color="blue" background="white" font_color="blue" font_size="9pt" label_side="bottom">
+						<shape type="circle" radius="18"/>
+					</aux>
+					<group color="red" background="white" font_color="red" font_size="9pt"/>
+					<connector color="#FF007F" background="white" font_color="#FF007F" font_size="9pt" isee:thickness="1"/>
+					<text_box color="black" background="white" text_align="left" vertical_text_align="top" font_size="12pt"/>
+					<isee:loop_indicator color="black" background="white" text_align="left" vertical_text_align="top" font_size="12pt"/>
+					<numeric_display color="white" background="white" font_size="12pt" border_width="thin" border_style="solid" isee:transparent="false" isee:show_divider="true" isee:show_bounding_box="true" label_side="left"/>
+					<graph color="black" background="white" font_size="12pt" axis_color="#666666" grid_color="#C8C8C8" isee:graph_area_color="white" legend_position="bottom" isee:transparent="false" isee:hide_border="false" axis_title_font_style="normal" axis_title_font_weight="normal" axis_title_text_decoration="none" axis_title_text_align="center" axis_title_vertical_text_align="center" axis_title_font_color="black" axis_title_font_family="Arial" axis_title_font_size="12pt" axis_title_text_padding="2" axis_title_text_border_color="black" axis_title_text_border_width="thin" axis_title_text_border_style="none" axis_label_font_style="normal" axis_label_font_weight="normal" axis_label_text_decoration="none" axis_label_text_align="center" axis_label_vertical_text_align="center" axis_label_font_color="black" axis_label_font_family="Arial" axis_label_font_size="9pt" axis_label_text_padding="2" axis_label_text_border_color="black" axis_label_text_border_width="thin" axis_label_text_border_style="none">
+						<isee:series_styles>
+							<isee:series_style color="blue" thickness="1"/>
+							<isee:series_style color="red" thickness="1" pen_style="dot_dashed"/>
+							<isee:series_style color="fuchsia" thickness="1" pen_style="dotted"/>
+							<isee:series_style color="#008F44" thickness="1" pen_style="dashed"/>
+							<isee:series_style color="#FF7F00" thickness="1"/>
+							<isee:series_style color="#7F00FF" thickness="1" pen_style="dot_dashed"/>
+							<isee:series_style color="#0CA0FF" thickness="1" pen_style="dotted"/>
+							<isee:series_style color="lime" thickness="1" pen_style="dashed"/>
+							<isee:series_style color="#FF007F" thickness="1"/>
+							<isee:series_style color="aqua" thickness="1" pen_style="dot_dashed"/>
+							<isee:series_style color="#F586FF" thickness="1" pen_style="dotted"/>
+							<isee:series_style color="black" thickness="1" pen_style="dashed"/>
+							<isee:series_style color="#C8C8C8" thickness="1"/>
+						</isee:series_styles>
+					</graph>
+					<table color="black" background="#E0E0E0" text_align="right" font_size="12pt" orientation="vertical" wrap_text="false" isee:auto_fit="true" isee:use_alternate_row_colors="false" isee:unlimited_table_length="false" blank_column_width="80" column_width="160" interval="1" report_balances="beginning" report_flows="summed" header_font_style="normal" header_font_weight="normal" header_text_decoration="none" header_text_align="center" header_vertical_text_align="center" header_font_color="black" header_font_family="Arial" header_font_size="12pt" header_text_padding="2" header_text_border_color="black" header_text_border_width="thin" header_text_border_style="none"/>
+				</style>
+				<stock label_side="center" x="719" y="529" width="72" height="54" name="Electrolysis\nPlants/Facilities"/>
+				<flow label_side="bottom" x="650.75" y="561.5" name="Additions to\nElectrolysis Plants">
+					<pts>
+						<pt x="570.5" y="561.5"/>
+						<pt x="719" y="561.5"/>
+					</pts>
+				</flow>
+				<flow x="869.75" y="559.5" name="Plants Retired">
+					<pts>
+						<pt x="791" y="559.5"/>
+						<pt x="972.5" y="559.5"/>
+					</pts>
+				</flow>
+				<aux x="865.5" y="422.5" name="Initial Life Span"/>
+				<aux x="964.5" y="476.5" name="Current life span"/>
+				<connector uid="2" angle="3.57633">
+					<from>Initial_Life_Span</from>
+					<to>Current_life_span</to>
+				</connector>
+				<connector uid="3" angle="240.945">
+					<from>Current_life_span</from>
+					<to>Plants_Retired</to>
+				</connector>
+				<stock label_side="center" x="766.583" y="1160.42" name="Government\nFunding"/>
+				<flow x="669.333" y="1161.42" name="New RD Funding 2">
+					<pts>
+						<pt x="594.583" y="1161.42"/>
+						<pt x="744.083" y="1161.42"/>
+					</pts>
+				</flow>
+				<flow x="862.833" y="1163.42" name="R&amp;D Investment">
+					<pts>
+						<pt x="789.083" y="1163.42"/>
+						<pt x="960.583" y="1163.42"/>
+					</pts>
+				</flow>
+				<aux x="1058.41" y="1186.92" name="Time to allocate\nGov. Funding"/>
+				<connector uid="4" angle="38.8114">
+					<from>Government_Funding</from>
+					<to>&quot;R&amp;D_Investment&quot;</to>
+				</connector>
+				<connector uid="5" angle="173.148">
+					<from>&quot;Time_to_allocate_Gov._Funding&quot;</from>
+					<to>&quot;R&amp;D_Investment&quot;</to>
+				</connector>
+				<stock label_side="center" x="797.583" y="1272.42" name="R&amp;D"/>
+				<aux x="999.583" y="1219.92" name="R&amp;D/$ invested"/>
+				<flow x="883.333" y="1270.42" name="Additions to R&amp;D">
+					<pts>
+						<pt x="946.583" y="1270.42"/>
+						<pt x="820.083" y="1270.42"/>
+					</pts>
+				</flow>
+				<aux x="1058.41" y="1311.58" name="Effectiveness of R&amp;D Spending"/>
+				<connector uid="6" angle="280.846">
+					<from>&quot;R&amp;D_Investment&quot;</from>
+					<to>&quot;Additions_to_R&amp;D&quot;</to>
+				</connector>
+				<connector uid="7" angle="203.481">
+					<from>&quot;R&amp;D/$_invested&quot;</from>
+					<to>&quot;Additions_to_R&amp;D&quot;</to>
+				</connector>
+				<connector uid="8" angle="166.77">
+					<from>&quot;Effectiveness_of_R&amp;D_Spending&quot;</from>
+					<to>&quot;Additions_to_R&amp;D&quot;</to>
+				</connector>
+				<aux label_side="bottom" x="789.583" y="1359.42" name="Minimum R&amp;D\nfor Sources"/>
+				<aux x="669.333" y="1325.42" name="Ratio of R&amp;D to minimum"/>
+				<connector uid="9" angle="202.453">
+					<from>&quot;R&amp;D&quot;</from>
+					<to>&quot;Ratio_of_R&amp;D_to_minimum&quot;</to>
+				</connector>
+				<connector uid="10" angle="176.634">
+					<from>&quot;Minimum_R&amp;D_for_Sources&quot;</from>
+					<to>&quot;Ratio_of_R&amp;D_to_minimum&quot;</to>
+				</connector>
+				<aux x="437.583" y="1298.92" name="Implementation Delay (F/y)"/>
+				<aux x="579.583" y="1237.92" name="Time for\nImplementation Delay"/>
+				<connector uid="11" angle="202.306">
+					<from>&quot;Ratio_of_R&amp;D_to_minimum&quot;</from>
+					<to>&quot;Implementation_Delay_(F/y)&quot;</to>
+				</connector>
+				<aux x="399.25" y="520" name="Cost Per Plant"/>
+				<aux x="552.5" y="494.5" name="(Investment/cost) Implementation time"/>
+				<aux x="526" y="697.5" name="Tons per Plant Per year"/>
+				<aux x="696.5" y="467.5" name="Hydrogen per year"/>
+				<connector uid="14" angle="112.27">
+					<from>&quot;Electrolysis_Plants/Facilities&quot;</from>
+					<to>Hydrogen_per_year</to>
+				</connector>
+				<connector uid="16" angle="332.176">
+					<from>Cost_Per_Plant</from>
+					<to>Additions_to_Electrolysis_Plants</to>
+				</connector>
+				<stacked_container uid="18" x="1812.08" y="213.083">
+					<graph width="350" height="250" comparative="true" type="time_series" show_grid="false" isee:tick_type="none" include_units_in_legend="false" plot_numbers="true" isee:label_pie_slices="false" isee:show_pie_borders="true" num_x_grid_lines="0" num_y_grid_lines="0" num_x_labels="5" num_y_labels="3" isee:fill_intensity="0.1" isee:allow_zero_axis="true" left_axis_multi_scale="false" left_axis_auto_scale="true" left_include_units="true" right_axis_multi_scale="false" right_axis_auto_scale="true" right_include_units="true">
+						<plot color="blue" isee:keep_zero_visible="true" pen_width="1" index="0" show_y_axis="true">
+							<entity name='"Electrolysis_Plants/Facilities"'/>
+						</plot>
+					</graph>
+				</stacked_container>
+				<stock x="239.5" y="588" name="Investment in Plants 1"/>
+				<flow x="145.75" y="588" name="New Investment">
+					<pts>
+						<pt x="74.5" y="588"/>
+						<pt x="217" y="588"/>
+					</pts>
+				</flow>
+				<flow x="322.25" y="589.5" name="Spending">
+					<pts>
+						<pt x="262" y="589.5"/>
+						<pt x="406.5" y="589.5"/>
+					</pts>
+				</flow>
+				<aux x="246.5" y="461.5" name="Time for Spending"/>
+				<connector uid="27" angle="320.711">
+					<from>Time_for_Spending</from>
+					<to>Spending</to>
+				</connector>
+				<connector uid="28" angle="274.014">
+					<from>Investment_in_Plants_1</from>
+					<to>Spending</to>
+				</connector>
+				<connector uid="29" angle="345.44">
+					<from>Spending</from>
+					<to>Additions_to_Electrolysis_Plants</to>
+				</connector>
+				<stock label_side="center" x="2362.5" y="1592.5" width="72" height="54" name="Fuel Cell\nPlants/Facilities"/>
+				<flow label_side="bottom" x="2288.25" y="1644.25" name="Additions to\nFuel Cell Plants">
+					<pts>
+						<pt x="2214" y="1644.25"/>
+						<pt x="2362.5" y="1644.25"/>
+					</pts>
+				</flow>
+				<flow x="2513.25" y="1623" name="Fuel Cell Plants Retired">
+					<pts>
+						<pt x="2434.5" y="1623"/>
+						<pt x="2616" y="1623"/>
+					</pts>
+				</flow>
+				<aux x="2563" y="1459" name="Initial Life Span(FC)"/>
+				<aux x="2608" y="1540" name="Current life span(FC)"/>
+				<connector uid="30" angle="317.102">
+					<from>&quot;Fuel_Cell_Plants/Facilities&quot;</from>
+					<to>Fuel_Cell_Plants_Retired</to>
+				</connector>
+				<connector uid="31" angle="3.57633">
+					<from>&quot;Initial_Life_Span(FC)&quot;</from>
+					<to>&quot;Current_life_span(FC)&quot;</to>
+				</connector>
+				<connector uid="32" angle="240.945">
+					<from>&quot;Current_life_span(FC)&quot;</from>
+					<to>Fuel_Cell_Plants_Retired</to>
+				</connector>
+				<stock label_side="center" x="2345.5" y="1751.5" width="58" height="44" name="Government\nFunding(FC)"/>
+				<flow x="2277.25" y="1775" name="New RD Funding(FC)">
+					<pts>
+						<pt x="2209" y="1775"/>
+						<pt x="2345.5" y="1775"/>
+					</pts>
+				</flow>
+				<flow x="2477.25" y="1777" name="R&amp;D Investment(FC)">
+					<pts>
+						<pt x="2403.5" y="1777"/>
+						<pt x="2575" y="1777"/>
+					</pts>
+				</flow>
+				<aux x="2576" y="1716" name='"Time to allocate\nGov. Funding"(FC)'/>
+				<connector uid="33" angle="38.8114">
+					<from>&quot;Government_Funding(FC)&quot;</from>
+					<to>&quot;R&amp;D_Investment(FC)&quot;</to>
+				</connector>
+				<connector uid="34" angle="189.462">
+					<from>&quot;\&quot;Time_to_allocate_Gov._Funding\&quot;(FC)&quot;</from>
+					<to>&quot;R&amp;D_Investment(FC)&quot;</to>
+				</connector>
+				<stock label_side="center" x="2412" y="1886" name="Fuel Cell\nR&amp;D"/>
+				<aux x="2614" y="1833.5" name="R&amp;D/$ invested in\nFuel Cells"/>
+				<flow x="2497.75" y="1884" name="Additions to Fuel\nCell R&amp;D">
+					<pts>
+						<pt x="2561" y="1884"/>
+						<pt x="2434.5" y="1884"/>
+					</pts>
+				</flow>
+				<aux x="2672.83" y="1925.17" name="Effectiveness of R&amp;D Spending(FC)"/>
+				<connector uid="35" angle="291.724">
+					<from>&quot;R&amp;D_Investment(FC)&quot;</from>
+					<to>&quot;Additions_to_Fuel_Cell_R&amp;D&quot;</to>
+				</connector>
+				<connector uid="36" angle="203.295">
+					<from>&quot;R&amp;D/$_invested_in_Fuel_Cells&quot;</from>
+					<to>&quot;Additions_to_Fuel_Cell_R&amp;D&quot;</to>
+				</connector>
+				<connector uid="37" angle="160.463">
+					<from>&quot;Effectiveness_of_R&amp;D_Spending(FC)&quot;</from>
+					<to>&quot;Additions_to_Fuel_Cell_R&amp;D&quot;</to>
+				</connector>
+				<aux label_side="bottom" x="2404" y="1973" name="Minimum R&amp;D\nfor Sources(FC)"/>
+				<aux x="2283.75" y="1939" name="Ratio of R&amp;D to\nminimum(FC)"/>
+				<connector uid="38" angle="208.142">
+					<from>&quot;Fuel_Cell_R&amp;D&quot;</from>
+					<to>&quot;Ratio_of_R&amp;D_to_minimum(FC)&quot;</to>
+				</connector>
+				<connector uid="39" angle="176.634">
+					<from>&quot;Minimum_R&amp;D_for_Sources(FC)&quot;</from>
+					<to>&quot;Ratio_of_R&amp;D_to_minimum(FC)&quot;</to>
+				</connector>
+				<aux x="2052" y="1912.5" name="Fuel Cell Implementation Delay (F/y)"/>
+				<aux x="2209" y="1833.5" name="Time for Fuel Cell\nImplementation Delay"/>
+				<connector uid="40" angle="202.306">
+					<from>&quot;Ratio_of_R&amp;D_to_minimum(FC)&quot;</from>
+					<to>&quot;Fuel_Cell_Implementation_Delay_(F/y)&quot;</to>
+				</connector>
+				<connector uid="41" angle="76.293">
+					<from>&quot;Fuel_Cell_Implementation_Delay_(F/y)&quot;</from>
+					<to>Additions_to_Fuel_Cell_Plants</to>
+				</connector>
+				<aux x="2046" y="1589" name="Cost Per Plant(FC)"/>
+				<aux x="2196" y="1558" name="(Investment/cost)\nImplementation time(FC)"/>
+				<aux x="2237" y="1496" name="Electricity Per Plant\nPer year"/>
+				<aux x="2340" y="1531" name="Electricity per year"/>
+				<connector uid="42" angle="112.27">
+					<from>&quot;Fuel_Cell_Plants/Facilities&quot;</from>
+					<to>Electricity_per_year</to>
+				</connector>
+				<connector uid="43" angle="7.85331">
+					<from>Electricity_Per_Plant_Per_year</from>
+					<to>Electricity_per_year</to>
+				</connector>
+				<connector uid="44" angle="332.176">
+					<from>&quot;Cost_Per_Plant(FC)&quot;</from>
+					<to>Additions_to_Fuel_Cell_Plants</to>
+				</connector>
+				<stock label_side="center" x="1827.5" y="1627" width="78" height="52" name="Investment in\nFuel Cell Plants"/>
+				<flow x="1772.75" y="1653" name="New Investment(FC)">
+					<pts>
+						<pt x="1718" y="1653"/>
+						<pt x="1827.5" y="1653"/>
+					</pts>
+				</flow>
+				<flow x="1965.75" y="1653" name="Fuel Cell Spending">
+					<pts>
+						<pt x="1905.5" y="1653"/>
+						<pt x="2050" y="1653"/>
+					</pts>
+				</flow>
+				<aux x="1890" y="1525" name="Time for Spending(FC)"/>
+				<connector uid="45" angle="320.711">
+					<from>&quot;Time_for_Spending(FC)&quot;</from>
+					<to>Fuel_Cell_Spending</to>
+				</connector>
+				<connector uid="46" angle="274.014">
+					<from>Investment_in_Fuel_Cell_Plants</from>
+					<to>Fuel_Cell_Spending</to>
+				</connector>
+				<connector uid="47" angle="345.44">
+					<from>Fuel_Cell_Spending</from>
+					<to>Additions_to_Fuel_Cell_Plants</to>
+				</connector>
+				<stacked_container uid="48" x="2820" y="1465" width="527" height="376">
+					<graph width="527" height="376" comparative="true" type="time_series" show_grid="false" isee:tick_type="none" include_units_in_legend="false" plot_numbers="false" isee:label_pie_slices="false" isee:show_pie_borders="true" num_x_grid_lines="0" num_y_grid_lines="0" num_x_labels="5" num_y_labels="3" isee:fill_intensity="0.1" isee:allow_zero_axis="true" left_axis_multi_scale="false" left_axis_auto_scale="true" left_include_units="true" right_axis_multi_scale="false" right_axis_auto_scale="true" right_include_units="true">
+						<plot color="blue" isee:keep_zero_visible="true" pen_width="1" index="0" show_y_axis="true">
+							<entity name='"Fuel_Cell_Plants/Facilities"'/>
+						</plot>
+					</graph>
+				</stacked_container>
+				<group locked="true" x="1567.5" y="1402" width="1844" height="790.5" name="Hydrogen Fuel Cells">
+					<item uid="239"/>
+					<item uid="250"/>
+					<item uid="48"/>
+				</group>
+				<aux x="3582.71" y="191.583" name="Electricity Demand\nper Capita(2025)"/>
+				<aux x="4077.83" y="393.708" name="Electricity Demand Growth per Year"/>
+				<stock label_side="center" x="4093.13" y="241.458" width="78.125" height="55" name="Overall Electricity\nDemand"/>
+				<flow x="4001.94" y="268.958" name="New Growth in Electricity Demand">
+					<pts>
+						<pt x="3898.75" y="268.958"/>
+						<pt x="4093.13" y="268.958"/>
+					</pts>
+				</flow>
+				<stacked_container uid="54" x="4440" y="580.624">
+					<graph width="350" height="250" comparative="true" type="time_series" show_grid="false" isee:tick_type="none" include_units_in_legend="false" plot_numbers="false" isee:label_pie_slices="false" isee:show_pie_borders="true" num_x_grid_lines="0" num_y_grid_lines="0" num_x_labels="5" num_y_labels="3" isee:fill_intensity="0.1" isee:allow_zero_axis="true" left_axis_multi_scale="false" left_axis_auto_scale="true" left_include_units="true" right_axis_multi_scale="false" right_axis_auto_scale="true" right_include_units="true">
+						<plot color="blue" isee:keep_zero_visible="true" pen_width="1" index="0" show_y_axis="true">
+							<entity name="Demand_for_Electricity"/>
+						</plot>
+					</graph>
+				</stacked_container>
+				<connector uid="56" angle="36.1677">
+					<from>&quot;Electricity_Demand_per_Capita(2025)&quot;</from>
+					<to>New_Growth_in_Electricity_Demand</to>
+				</connector>
+				<connector uid="57" angle="116.187">
+					<from>Overall_Electricity_Demand</from>
+					<to>New_Growth_in_Electricity_Demand</to>
+				</connector>
+				<stock label_side="center" x="4552.32" y="230.208" width="78.9286" height="50" name="Growth in\nElectricity Demand"/>
+				<flow x="4459.01" y="255.208" name="New Growth in Electricity Demand Fraction">
+					<pts>
+						<pt x="4365.71" y="255.208"/>
+						<pt x="4552.32" y="255.208"/>
+					</pts>
+				</flow>
+				<flow x="4710.05" y="254.851" name="Demand Returning\nto Normal">
+					<pts>
+						<pt x="4631.25" y="254.851"/>
+						<pt x="4812.86" y="254.851"/>
+					</pts>
+				</flow>
+				<aux x="4357.14" y="208.422" name="Initial Growth\nFactor"/>
+				<aux x="4280" y="155.565" name="Scenario for Growth\nin Demand"/>
+				<aux x="4379.29" y="146.333" name="Time for Growth\nto Start"/>
+				<aux x="4508.57" y="151.279" name="Time for Growth\nto Stop"/>
+				<aux x="4591.79" y="183.279" name="Adjustment Time\nFor Growth"/>
+				<aux x="4768.57" y="197.708" name="Time to Return\nto Normal"/>
+				<connector uid="58" angle="350.91">
+					<from>Initial_Growth_Factor</from>
+					<to>New_Growth_in_Electricity_Demand_Fraction</to>
+				</connector>
+				<connector uid="59" angle="348.024">
+					<from>Scenario_for_Growth_in_Demand</from>
+					<to>New_Growth_in_Electricity_Demand_Fraction</to>
+				</connector>
+				<connector uid="60" angle="342.766">
+					<from>Time_for_Growth_to_Start</from>
+					<to>New_Growth_in_Electricity_Demand_Fraction</to>
+				</connector>
+				<connector uid="61" angle="226.931">
+					<from>Time_for_Growth_to_Stop</from>
+					<to>New_Growth_in_Electricity_Demand_Fraction</to>
+				</connector>
+				<connector uid="62" angle="189.006">
+					<from>Adjustment_Time_For_Growth</from>
+					<to>New_Growth_in_Electricity_Demand_Fraction</to>
+				</connector>
+				<connector uid="63" angle="191.768">
+					<from>Time_to_Return_to_Normal</from>
+					<to>Demand_Returning_to_Normal</to>
+				</connector>
+				<connector uid="64" angle="34.1984">
+					<from>Growth_in_Electricity_Demand</from>
+					<to>Demand_Returning_to_Normal</to>
+				</connector>
+				<aux x="4348.43" y="371.279" name="Demand for\nElectricity"/>
+				<connector uid="65" angle="351.598">
+					<from>Overall_Electricity_Demand</from>
+					<to>Demand_for_Electricity</to>
+				</connector>
+				<connector uid="66" angle="189.103">
+					<from>Growth_in_Electricity_Demand</from>
+					<to>Demand_for_Electricity</to>
+				</connector>
+				<aux x="3790" y="375.708" name="Adjustment Time\nfor Overall Electricity Demand"/>
+				<connector uid="67" angle="355.236">
+					<from>Adjustment_Time_for_Overall_Electricity_Demand</from>
+					<to>New_Growth_in_Electricity_Demand</to>
+				</connector>
+				<stock label_side="center" x="698.25" y="303" width="94" height="61" name="Average Annual\nHydrogen Per Year"/>
+				<flow x="612.625" y="340.5" name="Net Change in Average Annual Hydrogen Per Year">
+					<pts>
+						<pt x="515" y="340.5"/>
+						<pt x="698.25" y="340.5"/>
+					</pts>
+				</flow>
+				<aux x="455" y="253.75" name="Adjustment Time for Average Annual Hydrogen Per Year"/>
+				<connector uid="68" angle="0">
+					<from>Adjustment_Time_for_Average_Annual_Hydrogen_Per_Year</from>
+					<to>Net_Change_in_Average_Annual_Hydrogen_Per_Year</to>
+				</connector>
+				<connector uid="69" angle="142.043">
+					<from>Average_Annual_Hydrogen_Per_Year</from>
+					<to>Net_Change_in_Average_Annual_Hydrogen_Per_Year</to>
+				</connector>
+				<connector uid="70" angle="99.5366">
+					<from>Hydrogen_per_year</from>
+					<to>Net_Change_in_Average_Annual_Hydrogen_Per_Year</to>
+				</connector>
+				<aux x="622.25" y="212.5" name="TWh/Million Tonnes of Hydrogen"/>
+				<aux x="1040" y="225.5" name="MWh to TWh"/>
+				<aux x="740.833" y="176.75" name="Tons to Tonnes"/>
+				<aux x="778.5" y="105" name="TWh per Million Tons of Hydrogen"/>
+				<connector uid="71" angle="55.7843">
+					<from>&quot;TWh/Million_Tonnes_of_Hydrogen&quot;</from>
+					<to>TWh_per_Million_Tons_of_Hydrogen</to>
+				</connector>
+				<connector uid="72" angle="103.601">
+					<from>Tons_to_Tonnes</from>
+					<to>TWh_per_Million_Tons_of_Hydrogen</to>
+				</connector>
+				<aux x="946.5" y="117.5" name="MWh per Million Tons of Hydrogen"/>
+				<connector uid="73" angle="17.354">
+					<from>TWh_per_Million_Tons_of_Hydrogen</from>
+					<to>MWh_per_Million_Tons_of_Hydrogen</to>
+				</connector>
+				<connector uid="74" angle="116.565">
+					<from>MWh_to_TWh</from>
+					<to>MWh_per_Million_Tons_of_Hydrogen</to>
+				</connector>
+				<aux x="1143.75" y="225.5" name="Millions of Tons to Tons"/>
+				<aux x="1183.75" y="117.417" name="MWh per Ton of Hydrogen"/>
+				<connector uid="75" angle="48.0128">
+					<from>MWh_per_Million_Tons_of_Hydrogen</from>
+					<to>MWh_per_Ton_of_Hydrogen</to>
+				</connector>
+				<connector uid="76" angle="51.8924">
+					<from>Millions_of_Tons_to_Tons</from>
+					<to>MWh_per_Ton_of_Hydrogen</to>
+				</connector>
+				<aux label_side="bottom" x="1077.5" y="343.75" name="Average Annual\nMWh from Hydrogen"/>
+				<stacked_container uid="79" x="1607.75" y="723.5">
+					<graph width="350" height="250" comparative="true" type="time_series" show_grid="false" isee:tick_type="none" include_units_in_legend="false" plot_numbers="false" isee:label_pie_slices="false" isee:show_pie_borders="true" num_x_grid_lines="0" num_y_grid_lines="0" num_x_labels="5" num_y_labels="3" isee:fill_intensity="0.1" isee:allow_zero_axis="true" left_axis_multi_scale="false" left_axis_auto_scale="true" left_include_units="true" right_axis_multi_scale="false" right_axis_auto_scale="true" right_include_units="true">
+						<plot color="blue" isee:keep_zero_visible="true" pen_width="1" index="0" show_y_axis="true">
+							<entity name="Average_Annual_MWh_from_Hydrogen"/>
+						</plot>
+					</graph>
+				</stacked_container>
+				<aux x="4745" y="460.541" name="Electricity Storage Demand"/>
+				<connector uid="80" angle="6.79721">
+					<from>Demand_for_Electricity</from>
+					<to>Electricity_Storage_Demand</to>
+				</connector>
+				<aux x="4806" y="393.708" name="Fraction of Electricity Needed for Storage"/>
+				<connector uid="81" angle="213.311">
+					<from>Fraction_of_Electricity_Needed_for_Storage</from>
+					<to>Electricity_Storage_Demand</to>
+				</connector>
+				<aux x="1140.58" y="451.083" name="Ratio of Supply to Demand"/>
+				<connector uid="83" angle="326.889">
+					<from>Average_Annual_MWh_from_Hydrogen</from>
+					<to>Ratio_of_Supply_to_Demand</to>
+				</connector>
+				<connector uid="84" angle="50.8263">
+					<from>
+						<alias uid="82"/>
+					</from>
+					<to>Ratio_of_Supply_to_Demand</to>
+				</connector>
+				<aux label_side="bottom" x="1316.67" y="451.083" name="Effect of Supply to Demand Ratio on Investments"/>
+				<connector uid="85" angle="34.9788">
+					<from>Ratio_of_Supply_to_Demand</from>
+					<to>Effect_of_Supply_to_Demand_Ratio_on_Investments</to>
+				</connector>
+				<connector uid="86" angle="165.964">
+					<from>
+						<alias uid="87"/>
+					</from>
+					<to>Spending</to>
+				</connector>
+				<aux x="1490" y="194.5" name="Electrolysis Plant Efficiency"/>
+				<aux x="1328.42" y="225.5" name="MWh per Ton of Hydrogen ( E efficiency)"/>
+				<connector uid="88" angle="9.96849">
+					<from>MWh_per_Ton_of_Hydrogen</from>
+					<to>&quot;MWh_per_Ton_of_Hydrogen_(_E_efficiency)&quot;</to>
+				</connector>
+				<connector uid="90" angle="159.499">
+					<from>Electrolysis_Plant_Efficiency</from>
+					<to>&quot;MWh_per_Ton_of_Hydrogen_(_E_efficiency)&quot;</to>
+				</connector>
+				<aux x="2708.75" y="1721.5" name="Hydrogen Fuel\nCell Efficiency"/>
+				<aux x="1235" y="315.75" name="Actual MWh per Ton of Hydrogen"/>
+				<connector uid="92" angle="202.834">
+					<from>
+						<alias uid="91"/>
+					</from>
+					<to>Actual_MWh_per_Ton_of_Hydrogen</to>
+				</connector>
+				<connector uid="93" angle="244.42">
+					<from>&quot;MWh_per_Ton_of_Hydrogen_(_E_efficiency)&quot;</from>
+					<to>Actual_MWh_per_Ton_of_Hydrogen</to>
+				</connector>
+				<connector uid="94" angle="208.072">
+					<from>Actual_MWh_per_Ton_of_Hydrogen</from>
+					<to>Average_Annual_MWh_from_Hydrogen</to>
+				</connector>
+				<aux x="1270.63" y="623.25" name="Political Will"/>
+				<connector uid="95" angle="346.494">
+					<from>Ratio_of_Supply_to_Demand</from>
+					<to>Political_Will</to>
+				</connector>
+				<stock label_side="center" x="908.08" y="1656.25" width="76.6667" height="58.3333" name="Cumulative Cost"/>
+				<flow x="785.29" y="1685.42" name="Added Cost">
+					<pts>
+						<pt x="662.5" y="1685.42"/>
+						<pt x="908.08" y="1685.42"/>
+					</pts>
+				</flow>
+				<aux x="701.25" y="1590.42" name="Electrolysis Plant Costs"/>
+				<connector uid="98" angle="274.493">
+					<from>
+						<alias uid="96"/>
+					</from>
+					<to>Electrolysis_Plant_Costs</to>
+				</connector>
+				<connector uid="99" angle="265.244">
+					<from>
+						<alias uid="97"/>
+					</from>
+					<to>Electrolysis_Plant_Costs</to>
+				</connector>
+				<connector uid="100" angle="261.254">
+					<from>Electrolysis_Plant_Costs</from>
+					<to>Added_Cost</to>
+				</connector>
+				<aux x="501.084" y="1590.42" name="Fuel Cell Costs"/>
+				<connector uid="103" angle="279.593">
+					<from>
+						<alias uid="101"/>
+					</from>
+					<to>Fuel_Cell_Costs</to>
+				</connector>
+				<connector uid="104" angle="272.017">
+					<from>
+						<alias uid="102"/>
+					</from>
+					<to>Fuel_Cell_Costs</to>
+				</connector>
+				<connector uid="105" angle="321.271">
+					<from>Fuel_Cell_Costs</from>
+					<to>Added_Cost</to>
+				</connector>
+				<stacked_container uid="106" x="1218.5" y="1628.33">
+					<graph width="350" height="250" comparative="true" type="time_series" show_grid="false" isee:tick_type="none" include_units_in_legend="false" plot_numbers="false" isee:label_pie_slices="false" isee:show_pie_borders="true" num_x_grid_lines="0" num_y_grid_lines="0" num_x_labels="5" num_y_labels="3" isee:fill_intensity="0.1" isee:allow_zero_axis="true" left_axis_multi_scale="false" left_axis_auto_scale="true" left_include_units="true" right_axis_multi_scale="false" right_axis_auto_scale="true" right_include_units="true">
+						<plot color="blue" isee:keep_zero_visible="true" pen_width="1" index="0" show_y_axis="true">
+							<entity name="Cumulative_Cost"/>
+						</plot>
+					</graph>
+				</stacked_container>
+				<connector uid="108" angle="32.7352">
+					<from>
+						<alias uid="109"/>
+					</from>
+					<to>Added_Cost</to>
+				</connector>
+				<connector uid="110" angle="0">
+					<from>
+						<alias uid="107"/>
+					</from>
+					<to>Added_Cost</to>
+				</connector>
+				<stock label_side="center" x="898.914" y="1987.92" width="82.5" height="58.75" name="Average Annual\nCost"/>
+				<flow x="770.457" y="2017.29" name="Net Change in Average Annual Cost">
+					<pts>
+						<pt x="630" y="2017.29"/>
+						<pt x="898.914" y="2017.29"/>
+					</pts>
+				</flow>
+				<connector uid="111" angle="300.512">
+					<from>Added_Cost</from>
+					<to>Net_Change_in_Average_Annual_Cost</to>
+				</connector>
+				<connector uid="112" angle="137.245">
+					<from>Average_Annual_Cost</from>
+					<to>Net_Change_in_Average_Annual_Cost</to>
+				</connector>
+				<aux x="629.25" y="1916.67" name="Time to Adjust\nYearly Spending"/>
+				<connector uid="113" angle="347.735">
+					<from>Time_to_Adjust_Yearly_Spending</from>
+					<to>Net_Change_in_Average_Annual_Cost</to>
+				</connector>
+				<aux x="78.3333" y="461.5" name="Initial Investment\nin Plants"/>
+				<aux x="1568.75" y="384.333" name="Price per MWh"/>
+				<aux x="1478.75" y="469.083" name="Income from Electricity Sales"/>
+				<connector uid="115" angle="355.236">
+					<from>Average_Annual_MWh_from_Hydrogen</from>
+					<to>Income_from_Electricity_Sales</to>
+				</connector>
+				<connector uid="116" angle="206.656">
+					<from>Price_per_MWh</from>
+					<to>Income_from_Electricity_Sales</to>
+				</connector>
+				<aux x="1685" y="384.333" name="Fraction of Electricity\nIncome Reinvested"/>
+				<aux x="1650" y="488.75" name="Income from Electricity Sales Reinvested"/>
+				<connector uid="117" angle="3.81407">
+					<from>Income_from_Electricity_Sales</from>
+					<to>Income_from_Electricity_Sales_Reinvested</to>
+				</connector>
+				<connector uid="118" angle="233.648">
+					<from>Fraction_of_Electricity_Income_Reinvested</from>
+					<to>Income_from_Electricity_Sales_Reinvested</to>
+				</connector>
+				<connector uid="119" angle="276.116">
+					<from>
+						<alias uid="120"/>
+					</from>
+					<to>New_Investment</to>
+				</connector>
+				<connector uid="1" angle="317.102">
+					<from>&quot;Electrolysis_Plants/Facilities&quot;</from>
+					<to>Plants_Retired</to>
+				</connector>
+				<stock label_side="center" x="721.333" y="742.083" width="75" height="56.6667" name="Hydrogen From\nPlants"/>
+				<flow x="619.917" y="770.417" name="Additions to Hydrogen\nper Plant">
+					<pts>
+						<pt x="518.5" y="770.417"/>
+						<pt x="721.333" y="770.417"/>
+					</pts>
+				</flow>
+				<flow x="883.667" y="770" name="Hydrogen per\nPlant Removed">
+					<pts>
+						<pt x="796.333" y="770"/>
+						<pt x="995" y="770"/>
+					</pts>
+				</flow>
+				<aux x="678.5" y="653.75" name="Average Hydrogen per Plant"/>
+				<connector uid="122" angle="102.089">
+					<from>Hydrogen_From_Plants</from>
+					<to>Average_Hydrogen_per_Plant</to>
+				</connector>
+				<connector uid="123" angle="270">
+					<from>&quot;Electrolysis_Plants/Facilities&quot;</from>
+					<to>Average_Hydrogen_per_Plant</to>
+				</connector>
+				<connector uid="124" angle="346.729">
+					<from>Average_Hydrogen_per_Plant</from>
+					<to>Hydrogen_per_Plant_Removed</to>
+				</connector>
+				<connector uid="125" angle="305.423">
+					<from>Plants_Retired</from>
+					<to>Hydrogen_per_Plant_Removed</to>
+				</connector>
+				<connector uid="126" angle="217.124">
+					<from>Additions_to_Electrolysis_Plants</from>
+					<to>Additions_to_Hydrogen_per_Plant</to>
+				</connector>
+				<connector uid="127" angle="340.579">
+					<from>Tons_per_Plant_Per_year</from>
+					<to>Additions_to_Hydrogen_per_Plant</to>
+				</connector>
+				<connector uid="129" angle="93.9603">
+					<from>Average_Hydrogen_per_Plant</from>
+					<to>Hydrogen_per_year</to>
+				</connector>
+				<connector uid="130" angle="31.7669">
+					<from>
+						<alias uid="131"/>
+					</from>
+					<to>Additions_to_Hydrogen_per_Plant</to>
+				</connector>
+				<group locked="true" x="29.25" y="53.833" width="2261.67" height="980.25" name="Hydrogen Production">
+					<item uid="120"/>
+					<item uid="131"/>
+					<item uid="132"/>
+					<item uid="139"/>
+					<item uid="145"/>
+					<item uid="156"/>
+					<item uid="160"/>
+					<item uid="165"/>
+					<item uid="18"/>
+					<item uid="79"/>
+					<item uid="82"/>
+					<item uid="87"/>
+					<item uid="91"/>
+				</group>
+				<group locked="true" x="313.25" y="1094.25" width="910" height="309" name="Government Spending">
+					<item uid="149"/>
+				</group>
+				<group locked="true" x="257.5" y="1472.05" width="1163.83" height="939.833" name="Economics">
+					<item uid="101"/>
+					<item uid="102"/>
+					<item uid="106"/>
+					<item uid="107"/>
+					<item uid="109"/>
+					<item uid="137"/>
+					<item uid="148"/>
+					<item uid="182"/>
+					<item uid="186"/>
+					<item uid="191"/>
+					<item uid="194"/>
+					<item uid="196"/>
+					<item uid="198"/>
+					<item uid="246"/>
+					<item uid="96"/>
+					<item uid="97"/>
+				</group>
+				<group locked="true" x="3528.75" y="120.583" width="1422.5" height="621.5" name="Electricity Demand">
+					<item uid="238"/>
+					<item uid="51"/>
+					<item uid="54"/>
+				</group>
+				<stacked_container uid="132" x="1845" y="478.083" width="410" height="293.333">
+					<graph width="410" height="293.333" comparative="true" type="time_series" show_grid="false" isee:tick_type="none" include_units_in_legend="false" plot_numbers="true" isee:label_pie_slices="false" isee:show_pie_borders="true" num_x_grid_lines="0" num_y_grid_lines="0" num_x_labels="5" num_y_labels="3" title="Ratio of Supply to Demand over Time" isee:fill_intensity="0.1" isee:allow_zero_axis="true" left_axis_multi_scale="false" left_axis_auto_scale="true" left_include_units="true" right_axis_multi_scale="false" right_axis_auto_scale="true" right_include_units="true">
+						<plot color="blue" isee:keep_zero_visible="true" pen_width="1" index="0" show_y_axis="true">
+							<entity name="Ratio_of_Supply_to_Demand"/>
+						</plot>
+					</graph>
+				</stacked_container>
+				<aux x="151.25" y="703.75" name="Percent of income from electricity sales reinvested in plants"/>
+				<connector uid="136" angle="138.366">
+					<from>Percent_of_income_from_electricity_sales_reinvested_in_plants</from>
+					<to>New_Investment</to>
+				</connector>
+				<stacked_container uid="137" x="1212.92" y="1935">
+					<graph width="350" height="250" comparative="true" type="time_series" show_grid="false" isee:tick_type="none" include_units_in_legend="false" plot_numbers="false" isee:label_pie_slices="false" isee:show_pie_borders="true" num_x_grid_lines="0" num_y_grid_lines="0" num_x_labels="5" num_y_labels="3" isee:fill_intensity="0.1" isee:allow_zero_axis="true" left_axis_multi_scale="false" left_axis_auto_scale="true" left_include_units="true" right_axis_multi_scale="false" right_axis_auto_scale="true" right_include_units="true">
+						<plot color="blue" isee:keep_zero_visible="true" pen_width="1" index="0" show_y_axis="true">
+							<entity name="Average_Annual_Cost"/>
+						</plot>
+					</graph>
+				</stacked_container>
+				<stacked_container uid="139" x="1040" y="653.75" width="285" height="208.75">
+					<graph width="285" height="208.75" type="time_series" show_grid="false" isee:tick_type="none" include_units_in_legend="false" plot_numbers="false" isee:label_pie_slices="false" isee:show_pie_borders="true" num_x_grid_lines="0" num_y_grid_lines="0" num_x_labels="5" num_y_labels="3" isee:fill_intensity="0.1" isee:allow_zero_axis="true" left_axis_multi_scale="false" left_axis_auto_scale="true" left_include_units="true" right_axis_multi_scale="false" right_axis_auto_scale="true" right_include_units="true">
+						<plot color="blue" isee:keep_zero_visible="true" pen_width="1" index="0" show_y_axis="true">
+							<entity name="Tons_per_Plant_Per_year"/>
+						</plot>
+						<plot color="red" pen_style="dot_dashed" isee:keep_zero_visible="true" pen_width="1" index="1" show_y_axis="true">
+							<entity name="Average_Hydrogen_per_Plant"/>
+						</plot>
+					</graph>
+				</stacked_container>
+				<aux label_side="top" x="922" y="343.75" name="Average Annual Hydrogen Per Year at Capacity"/>
+				<connector uid="142" angle="335.706">
+					<from>Average_Annual_Hydrogen_Per_Year</from>
+					<to>Average_Annual_Hydrogen_Per_Year_at_Capacity</to>
+				</connector>
+				<connector uid="143" angle="327.995">
+					<from>Average_Annual_Hydrogen_Per_Year_at_Capacity</from>
+					<to>Average_Annual_MWh_from_Hydrogen</to>
+				</connector>
+				<aux x="1016" y="297.75" name="Capacity Factor for Electrolysis Plants"/>
+				<connector uid="144" angle="225.246">
+					<from>Capacity_Factor_for_Electrolysis_Plants</from>
+					<to>Average_Annual_Hydrogen_Per_Year_at_Capacity</to>
+				</connector>
+				<aux x="2708.75" y="1631.5" name="Hydrogen Fuel Cell Capacity Factor"/>
+				<connector uid="146" angle="204.986">
+					<from>
+						<alias uid="145"/>
+					</from>
+					<to>Actual_MWh_per_Ton_of_Hydrogen</to>
+				</connector>
+				<aux x="479.333" y="1191.17" name="Percent of Income from Electricity Sales Reinvested in R&amp;D"/>
+				<connector uid="135" angle="347.005">
+					<from>&quot;Percent_of_Income_from_Electricity_Sales_Reinvested_in_R&amp;D&quot;</from>
+					<to>New_RD_Funding_2</to>
+				</connector>
+				<connector uid="150" angle="13.4197">
+					<from>
+						<alias uid="149"/>
+					</from>
+					<to>New_RD_Funding_2</to>
+				</connector>
+				<stock label_side="center" x="1329.92" y="2132" width="60.5" height="54" name="Total Profit"/>
+				<flow x="1227.83" y="2158.75" name="Additions to Profit">
+					<pts>
+						<pt x="1113.75" y="2158.75"/>
+						<pt x="1329.92" y="2158.75"/>
+					</pts>
+				</flow>
+				<connector uid="153" angle="2.71512">
+					<from>
+						<alias uid="148"/>
+					</from>
+					<to>Additions_to_Profit</to>
+				</connector>
+				<connector uid="157" angle="162.121">
+					<from>
+						<alias uid="156"/>
+					</from>
+					<to>Percent_of_income_from_electricity_sales_reinvested_in_plants</to>
+				</connector>
+				<aux x="515.167" y="440.5" name="Money for\nNew Plants"/>
+				<connector uid="158" angle="78.2971">
+					<from>Cost_Per_Plant</from>
+					<to>Money_for_New_Plants</to>
+				</connector>
+				<connector uid="159" angle="125.054">
+					<from>Plants_Retired</from>
+					<to>Money_for_New_Plants</to>
+				</connector>
+				<connector uid="161" angle="305.538">
+					<from>
+						<alias uid="160"/>
+					</from>
+					<to>New_Investment</to>
+				</connector>
+				<stock label_side="center" x="723.333" y="950.083" width="75" height="56.6667" name="Electrolyzers"/>
+				<flow x="621.917" y="978.417" name="Revamped\nElectrolyzers">
+					<pts>
+						<pt x="520.5" y="978.417"/>
+						<pt x="723.333" y="978.417"/>
+					</pts>
+				</flow>
+				<flow x="885.667" y="978" name="Electrolyzers\nRemoved">
+					<pts>
+						<pt x="798.333" y="978"/>
+						<pt x="997" y="978"/>
+					</pts>
+				</flow>
+				<aux x="822.5" y="871.5" name="Average Life\nof Electrolyzers"/>
+				<aux x="357" y="900.5" name="Electrolysers Per Plant"/>
+				<aux x="246.25" y="973.417" name="Desired Number\nof Electrolyzers"/>
+				<connector uid="166" angle="330.722">
+					<from>
+						<alias uid="165"/>
+					</from>
+					<to>Desired_Number_of_Electrolyzers</to>
+				</connector>
+				<connector uid="167" angle="196.06">
+					<from>Electrolysers_Per_Plant</from>
+					<to>Desired_Number_of_Electrolyzers</to>
+				</connector>
+				<aux x="375" y="973.417" name="Needed\nElectrolyzers"/>
+				<connector uid="168" angle="325.486">
+					<from>Desired_Number_of_Electrolyzers</from>
+					<to>Needed_Electrolyzers</to>
+				</connector>
+				<connector uid="169" angle="141.368">
+					<from>Electrolyzers</from>
+					<to>Needed_Electrolyzers</to>
+				</connector>
+				<connector uid="170" angle="336.708">
+					<from>Needed_Electrolyzers</from>
+					<to>Revamped_Electrolyzers</to>
+				</connector>
+				<aux x="529.583" y="918.5" name="Adjustment Time for Electrolyzers"/>
+				<connector uid="171" angle="357.252">
+					<from>Adjustment_Time_for_Electrolyzers</from>
+					<to>Revamped_Electrolyzers</to>
+				</connector>
+				<connector uid="172" angle="29.576">
+					<from>Electrolyzers</from>
+					<to>Electrolyzers_Removed</to>
+				</connector>
+				<aux x="471.5" y="2168.5" name="Cost to Revamp\nElectrolyzers"/>
+				<aux x="502.5" y="2285.5" name="Average Cost to\nRevamp Plant"/>
+				<aux x="642.5" y="2196.25" name="Plants Revamped"/>
+				<connector uid="187" angle="289.226">
+					<from>
+						<alias uid="186"/>
+					</from>
+					<to>Plants_Revamped</to>
+				</connector>
+				<connector uid="188" angle="240.537">
+					<from>
+						<alias uid="182"/>
+					</from>
+					<to>Plants_Revamped</to>
+				</connector>
+				<aux x="646.25" y="2285.5" name="Yearly Cost to\nRevamp Plants"/>
+				<connector uid="189" angle="316.685">
+					<from>Average_Cost_to_Revamp_Plant</from>
+					<to>Yearly_Cost_to_Revamp_Plants</to>
+				</connector>
+				<connector uid="190" angle="295.71">
+					<from>Plants_Revamped</from>
+					<to>Yearly_Cost_to_Revamp_Plants</to>
+				</connector>
+				<aux x="331" y="2322.5" name="Fraction of Plant Cost for Electrolyzers"/>
+				<connector uid="192" angle="303.212">
+					<from>
+						<alias uid="191"/>
+					</from>
+					<to>Average_Cost_to_Revamp_Plant</to>
+				</connector>
+				<connector uid="193" angle="344.268">
+					<from>Fraction_of_Plant_Cost_for_Electrolyzers</from>
+					<to>Average_Cost_to_Revamp_Plant</to>
+				</connector>
+				<connector uid="195" angle="4.76906">
+					<from>
+						<alias uid="194"/>
+					</from>
+					<to>Added_Cost</to>
+				</connector>
+				<connector uid="197" angle="0">
+					<from>
+						<alias uid="196"/>
+					</from>
+					<to>Additions_to_Profit</to>
+				</connector>
+				<stock label_side="center" x="1329.92" y="2324.5" width="60.5" height="54" name="Annual\nProfit"/>
+				<flow x="1231.04" y="2351.5" name="Net Change in Average Annual Profit">
+					<pts>
+						<pt x="1120.16" y="2351.5"/>
+						<pt x="1329.92" y="2351.5"/>
+					</pts>
+				</flow>
+				<connector uid="199" angle="299.539">
+					<from>Additions_to_Profit</from>
+					<to>Net_Change_in_Average_Annual_Profit</to>
+				</connector>
+				<connector uid="200" angle="346.504">
+					<from>
+						<alias uid="198"/>
+					</from>
+					<to>Net_Change_in_Average_Annual_Profit</to>
+				</connector>
+				<connector uid="201" angle="142.847">
+					<from>Annual_Profit</from>
+					<to>Net_Change_in_Average_Annual_Profit</to>
+				</connector>
+				<connector uid="202" angle="337.443">
+					<from>Average_Life_of_Electrolyzers</from>
+					<to>Electrolyzers_Removed</to>
+				</connector>
+				<aux label_side="left" x="735.083" y="871.5" name="Average Electrolysers\nPer Plant"/>
+				<connector uid="204" angle="119.765">
+					<from>Electrolyzers</from>
+					<to>Average_Electrolysers_Per_Plant</to>
+				</connector>
+				<connector uid="205" angle="243.435">
+					<from>&quot;Electrolysis_Plants/Facilities&quot;</from>
+					<to>Average_Electrolysers_Per_Plant</to>
+				</connector>
+				<stacked_container uid="19" x="2722.33" y="105.167" width="457" height="250">
+					<graph width="457" height="250" type="time_series" show_grid="false" isee:tick_type="none" include_units_in_legend="false" plot_numbers="true" isee:label_pie_slices="false" isee:show_pie_borders="true" num_x_grid_lines="0" num_y_grid_lines="0" num_x_labels="11" num_y_labels="3" title="Simulated Population vs. Historical" isee:fill_intensity="0.1" isee:allow_zero_axis="true" left_axis_multi_scale="false" left_axis_auto_scale="true" left_include_units="true" right_axis_multi_scale="false" right_axis_auto_scale="true" right_include_units="true">
+						<plot color="blue" isee:keep_zero_visible="true" pen_width="1" index="0" show_y_axis="true">
+							<entity name="Virginia's_Historical_Population"/>
+						</plot>
+						<plot color="red" isee:keep_zero_visible="true" pen_width="1" index="1" show_y_axis="true">
+							<entity name="Population"/>
+						</plot>
+					</graph>
+				</stacked_container>
+				<flow x="2691.17" y="435" name="Net Change in Populaiton">
+					<pts>
+						<pt x="2575.67" y="435"/>
+						<pt x="2806.67" y="435"/>
+					</pts>
+				</flow>
+				<stock label_side="center" x="2806.67" y="411" width="72" height="48" name="Population"/>
+				<connector uid="24" angle="155.596">
+					<from>Population</from>
+					<to>Net_Change_in_Populaiton</to>
+				</connector>
+				<aux x="2872.67" y="541.5" name="Ratio of Population to Maximum"/>
+				<connector uid="20" angle="317.755">
+					<from>Population</from>
+					<to>Ratio_of_Population_to_Maximum</to>
+				</connector>
+				<aux x="2623.67" y="570.5" name="Current Growth Rate"/>
+				<connector uid="23" angle="113.199">
+					<from>Current_Growth_Rate</from>
+					<to>Net_Change_in_Populaiton</to>
+				</connector>
+				<aux x="2647.67" y="132.5" name="Virginia's Historical Population"/>
+				<aux x="2748.67" y="596.5" name="Effect of the ratio on population growth"/>
+				<connector uid="26" angle="196.699">
+					<from>Effect_of_the_ratio_on_population_growth</from>
+					<to>Current_Growth_Rate</to>
+				</connector>
+				<connector uid="22" angle="221.634">
+					<from>Ratio_of_Population_to_Maximum</from>
+					<to>Effect_of_the_ratio_on_population_growth</to>
+				</connector>
+				<aux x="2576.67" y="325.5" name="Normal Birth Rate"/>
+				<connector uid="25" angle="225">
+					<from>Normal_Birth_Rate</from>
+					<to>Current_Growth_Rate</to>
+				</connector>
+				<aux x="2879.67" y="668.5" name="Maximum Population"/>
+				<connector uid="21" angle="65.4328">
+					<from>Maximum_Population</from>
+					<to>Ratio_of_Population_to_Maximum</to>
+				</connector>
+				<connector uid="52" angle="1.70698">
+					<from>
+						<alias uid="51"/>
+					</from>
+					<to>New_Growth_in_Electricity_Demand</to>
+				</connector>
+				<group locked="true" x="2343.33" y="78.8333" width="957.5" height="623.167" name="Population Sector">
+					<item uid="19"/>
+				</group>
+				<aux x="3862" y="1296.5" name="Historical Coal Generation in mWh"/>
+				<stacked_container uid="236" x="4129" y="1521.5" width="1082" height="603">
+					<graph width="1082" height="603" type="time_series" show_grid="false" isee:tick_type="none" include_units_in_legend="false" plot_numbers="true" isee:label_pie_slices="false" isee:show_pie_borders="true" num_x_grid_lines="0" num_y_grid_lines="0" num_x_labels="13" num_y_labels="5" title="Historical Generation by Source" isee:fill_intensity="0.1" to="2023" from="2001" isee:allow_zero_axis="true" left_axis_multi_scale="false" left_axis_auto_scale="true" left_include_units="true" right_axis_multi_scale="false" right_axis_auto_scale="true" right_include_units="true">
+						<plot color="blue" isee:keep_zero_visible="true" pen_width="3" index="0" show_y_axis="true">
+							<entity name="Historical_Coal_Generation_in_mWh"/>
+						</plot>
+						<plot color="red" pen_style="dot_dashed" isee:keep_zero_visible="true" pen_width="3" index="1" show_y_axis="true">
+							<entity name="Historical_Gas_Generation_in_mWh"/>
+						</plot>
+						<plot color="fuchsia" pen_style="dotted" isee:keep_zero_visible="true" pen_width="3" index="2" show_y_axis="true">
+							<entity name="Historical_Nuclear_Generation_in_mWh"/>
+						</plot>
+						<plot color="#008F44" isee:keep_zero_visible="true" pen_width="3" index="3" show_y_axis="true">
+							<entity name="Historical_Wind_Generation_in_mWh"/>
+						</plot>
+						<plot color="#FF7F00" isee:keep_zero_visible="true" pen_width="3" index="4" show_y_axis="true">
+							<entity name="Historical_Solar_Generation_in_mWh"/>
+						</plot>
+						<plot color="#7F00FF" pen_style="dot_dashed" isee:keep_zero_visible="true" pen_width="3" index="5" show_y_axis="true">
+							<entity name="Historical_Biomass_Generation_mWh"/>
+						</plot>
+						<plot color="lime" isee:keep_zero_visible="true" pen_width="3" index="6" show_y_axis="true">
+							<entity name="Historical_Demand_for_Electricity"/>
+						</plot>
+					</graph>
+				</stacked_container>
+				<aux x="4119" y="1296.5" name="Historical Gas Generation in mWh"/>
+				<aux x="4386" y="1296.5" name="Historical Nuclear Generation in mWh"/>
+				<aux x="4643" y="1292.5" name="Historical Wind Generation in mWh"/>
+				<aux x="4840" y="1292.5" name="Historical Solar Generation in mWh"/>
+				<aux x="5038" y="1288.5" name="Historical Biomass Generation mWh"/>
+				<aux x="5295" y="1285.5" name="Historical Pumped\nStorage Generation in mWh"/>
+				<stacked_container uid="237" x="5215" y="1521.5" width="1082" height="603">
+					<graph width="1082" height="603" type="area" isee:sum_stacked_legend="true" isee:stacked_show_hover_values="true" show_grid="false" isee:tick_type="none" include_units_in_legend="false" plot_numbers="false" isee:label_pie_slices="false" isee:show_pie_borders="true" num_x_grid_lines="0" num_y_grid_lines="0" num_x_labels="13" num_y_labels="5" title="Historical Generation by Source" isee:fill_intensity="0.55" to="2022" from="2001" isee:allow_zero_axis="true" left_axis_multi_scale="false" left_axis_auto_scale="true" left_include_units="true" right_axis_multi_scale="false" right_axis_auto_scale="true" right_include_units="true">
+						<plot color="blue" isee:keep_zero_visible="true" pen_width="3" index="0" show_y_axis="true">
+							<entity name="Historical_Coal_Generation_in_mWh"/>
+						</plot>
+						<plot color="red" pen_style="dot_dashed" isee:keep_zero_visible="true" pen_width="3" index="1" show_y_axis="true">
+							<entity name="Historical_Gas_Generation_in_mWh"/>
+						</plot>
+						<plot color="fuchsia" pen_style="dotted" isee:keep_zero_visible="true" pen_width="3" index="2" show_y_axis="true">
+							<entity name="Historical_Nuclear_Generation_in_mWh"/>
+						</plot>
+						<plot color="#4F8F00" isee:keep_zero_visible="true" pen_width="3" index="3" show_y_axis="true">
+							<entity name="Historical_Wind_Generation_in_mWh"/>
+						</plot>
+						<plot color="#7F00FF" pen_style="dot_dashed" isee:keep_zero_visible="true" pen_width="3" index="4" show_y_axis="true">
+							<entity name="Historical_Biomass_Generation_mWh"/>
+						</plot>
+						<plot color="#00FDFF" isee:keep_zero_visible="true" pen_width="3" index="5" show_y_axis="true">
+							<entity name="Historical_Solar_Generation_in_mWh"/>
+						</plot>
+					</graph>
+				</stacked_container>
+				<aux x="4095" y="1411.5" name="Historical Demand for Electricity"/>
+				<group locked="true" x="3730" y="1170" width="2655" height="1330" name="Historical Data Center Sector">
+					<item uid="236"/>
+					<item uid="237"/>
+				</group>
+				<stacked_container uid="238" x="3950" y="580.624">
+					<graph width="350" height="250" type="time_series" show_grid="false" isee:tick_type="none" include_units_in_legend="false" plot_numbers="false" isee:label_pie_slices="false" isee:show_pie_borders="true" num_x_grid_lines="0" num_y_grid_lines="0" num_x_labels="5" num_y_labels="3" isee:fill_intensity="0.1" isee:allow_zero_axis="true" left_axis_multi_scale="false" left_axis_auto_scale="true" left_include_units="true" right_axis_multi_scale="false" right_axis_auto_scale="true" right_include_units="true">
+						<plot color="blue" isee:keep_zero_visible="true" pen_width="1" index="0" show_y_axis="true">
+							<entity name="Historical_Demand_for_Electricity"/>
+						</plot>
+						<plot color="red" pen_style="dot_dashed" isee:keep_zero_visible="true" pen_width="1" index="1" show_y_axis="true">
+							<entity name="Demand_for_Electricity"/>
+						</plot>
+						<plot color="fuchsia" pen_style="dotted" isee:keep_zero_visible="true" pen_width="1" index="2" show_y_axis="true">
+							<entity name="Overall_Electricity_Demand"/>
+						</plot>
+					</graph>
+				</stacked_container>
+				<connector uid="241" angle="156.477">
+					<from>
+						<alias uid="239"/>
+					</from>
+					<to>Fuel_Cell_Spending</to>
+				</connector>
+				<aux x="758.833" y="230.5" name="Cost of ELectricity\nper ton hydrogen"/>
+				<aux x="840.5" y="257.5" name="Total electricity used\nfor hydrogen"/>
+				<connector uid="242" angle="9.28954">
+					<from>Average_Annual_Hydrogen_Per_Year</from>
+					<to>Total_electricity_used_for_hydrogen</to>
+				</connector>
+				<connector uid="243" angle="19.9238">
+					<from>Cost_of_ELectricity_per_ton_hydrogen</from>
+					<to>Total_electricity_used_for_hydrogen</to>
+				</connector>
+				<aux x="851.75" y="182.5" name="Wholesale price\nof electricity"/>
+				<aux x="922" y="217.5" name="Price of electricity\nfor producing carbon"/>
+				<connector uid="244" angle="353.797">
+					<from>Wholesale_price_of_electricity</from>
+					<to>Price_of_electricity_for_producing_carbon</to>
+				</connector>
+				<connector uid="245" angle="35.5377">
+					<from>Total_electricity_used_for_hydrogen</from>
+					<to>Price_of_electricity_for_producing_carbon</to>
+				</connector>
+				<connector uid="247" angle="340.907">
+					<from>
+						<alias uid="246"/>
+					</from>
+					<to>Added_Cost</to>
+				</connector>
+				<aux x="2454" y="1525" name="Hydrogen per Plant"/>
+				<aux x="2391" y="1470" name="Demand for\nHydrogen"/>
+				<connector uid="248" angle="81.3844">
+					<from>&quot;Fuel_Cell_Plants/Facilities&quot;</from>
+					<to>Demand_for_Hydrogen</to>
+				</connector>
+				<connector uid="249" angle="144.162">
+					<from>Hydrogen_per_Plant</from>
+					<to>Demand_for_Hydrogen</to>
+				</connector>
+				<stacked_container uid="250" x="1606.75" y="1804" width="382" height="292">
+					<graph width="382" height="292" type="time_series" show_grid="false" isee:tick_type="none" include_units_in_legend="false" plot_numbers="false" isee:label_pie_slices="false" isee:show_pie_borders="true" num_x_grid_lines="0" num_y_grid_lines="0" num_x_labels="5" num_y_labels="3" isee:fill_intensity="0.1" isee:allow_zero_axis="true" left_axis_multi_scale="false" left_axis_auto_scale="true" left_include_units="true" right_axis_multi_scale="false" right_axis_auto_scale="true" right_include_units="true">
+						<plot color="blue" isee:keep_zero_visible="true" pen_width="1" index="0" show_y_axis="true">
+							<entity name="Demand_for_Hydrogen"/>
+						</plot>
+						<plot color="red" pen_style="dot_dashed" isee:keep_zero_visible="true" pen_width="1" index="1" show_y_axis="true">
+							<entity name="Average_Annual_Hydrogen_Per_Year"/>
+						</plot>
+					</graph>
+				</stacked_container>
+				<connector uid="251" angle="266.214">
+					<from>Fuel_Cell_Plants_Retired</from>
+					<to>Additions_to_Fuel_Cell_Plants</to>
+				</connector>
+				<alias color="blue" background="white" font_style="italic" uid="82" x="1128.5" y="523.5" width="18" height="18">
+					<shape type="circle" radius="18"/>
+					<of>Electricity_Storage_Demand</of>
+				</alias>
+				<alias color="blue" background="white" font_style="italic" uid="87" x="372.25" y="666" width="18" height="18">
+					<shape type="circle" radius="18"/>
+					<of>Effect_of_Supply_to_Demand_Ratio_on_Investments</of>
+				</alias>
+				<alias color="blue" background="white" font_style="italic" uid="91" x="1404.75" y="324.75" width="18" height="18">
+					<shape type="circle" radius="18"/>
+					<of>Hydrogen_Fuel_Cell_Efficiency</of>
+				</alias>
+				<alias font_style="italic" uid="96" x="638.25" y="1493.92" width="18" height="18">
+					<of>Cost_Per_Plant</of>
+				</alias>
+				<alias font_style="italic" uid="97" x="752.04" y="1493.92" width="18" height="18">
+					<of>Additions_to_Electrolysis_Plants</of>
+				</alias>
+				<alias font_style="italic" uid="101" x="424.75" y="1493.92" width="18" height="18">
+					<of>&quot;Cost_Per_Plant(FC)&quot;</of>
+				</alias>
+				<alias font_style="italic" uid="102" x="550.5" y="1493.92" width="18" height="18">
+					<of>Additions_to_Fuel_Cell_Plants</of>
+				</alias>
+				<alias font_style="italic" uid="107" x="628.5" y="1775.17" width="18" height="18">
+					<of>&quot;R&amp;D_Investment&quot;</of>
+				</alias>
+				<alias font_style="italic" uid="109" x="716" y="1775.17" width="18" height="18">
+					<of>&quot;R&amp;D_Investment(FC)&quot;</of>
+				</alias>
+				<alias color="blue" background="white" font_style="italic" uid="120" x="164.75" y="395.5" width="18" height="18">
+					<shape type="circle" radius="18"/>
+					<of>Income_from_Electricity_Sales_Reinvested</of>
+				</alias>
+				<alias font_style="italic" uid="131" x="502.583" y="828.5" width="18" height="18">
+					<of>&quot;Implementation_Delay_(F/y)&quot;</of>
+				</alias>
+				<alias color="blue" background="white" font_style="italic" uid="145" x="1404.75" y="277" width="18" height="18">
+					<shape type="circle" radius="18"/>
+					<of>Hydrogen_Fuel_Cell_Capacity_Factor</of>
+				</alias>
+				<alias font_style="italic" uid="148" x="1028.21" y="2105" width="18" height="18">
+					<of>Income_from_Electricity_Sales</of>
+				</alias>
+				<alias font_style="italic" uid="149" x="470.333" y="1114.92" width="18" height="18">
+					<of>Income_from_Electricity_Sales</of>
+				</alias>
+				<alias font_style="italic" uid="156" x="212" y="763" width="18" height="18">
+					<of>&quot;Percent_of_Income_from_Electricity_Sales_Reinvested_in_R&amp;D&quot;</of>
+				</alias>
+				<alias color="blue" background="white" font_style="italic" uid="160" x="87.3333" y="395.5" width="18" height="18">
+					<shape type="circle" radius="18"/>
+					<of>Money_for_New_Plants</of>
+				</alias>
+				<alias font_style="italic" uid="165" x="129.25" y="873.5" width="72" height="54">
+					<of>&quot;Electrolysis_Plants/Facilities&quot;</of>
+				</alias>
+				<alias font_style="italic" uid="182" x="693.414" y="2123.25" width="18" height="18">
+					<of>Electrolyzers_Removed</of>
+				</alias>
+				<alias font_style="italic" uid="186" x="579.957" y="2123.25" width="18" height="18">
+					<of>Electrolysers_Per_Plant</of>
+				</alias>
+				<alias font_style="italic" uid="191" x="322" y="2215" width="18" height="18">
+					<of>Cost_Per_Plant</of>
+				</alias>
+				<alias color="blue" background="white" font_style="italic" uid="194" x="543.5" y="1775.17" width="18" height="18">
+					<shape type="circle" radius="18"/>
+					<of>Yearly_Cost_to_Revamp_Plants</of>
+				</alias>
+				<alias font_style="italic" uid="196" x="1028.21" y="2203.5" width="18" height="18">
+					<of>Added_Cost</of>
+				</alias>
+				<alias font_style="italic" uid="198" x="1112.25" y="2247.25" width="18" height="18">
+					<of>Time_to_Adjust_Yearly_Spending</of>
+				</alias>
+				<alias font_style="italic" uid="51" x="3807.33" y="200.583" width="72" height="48">
+					<of>Population</of>
+				</alias>
+				<alias font_style="italic" uid="239" x="2009.33" y="1736.67" width="18" height="18">
+					<of>Effect_of_Supply_to_Demand_Ratio_on_Investments</of>
+				</alias>
+				<alias color="blue" background="white" font_style="italic" uid="246" x="361" y="1638.5" width="18" height="18">
+					<shape type="circle" radius="18"/>
+					<of>Price_of_electricity_for_producing_carbon</of>
+				</alias>
+			</view>
+		</views>
+	</model>
+</xmile>
+
